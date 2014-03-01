@@ -7,7 +7,7 @@ var config = require('./config'),
     http = require('http'),
     path = require('path'),
     passport = require('passport'),
-    mongoose = require('mongoose'),
+//    mongoose = require('mongoose'),
     helmet = require('helmet');
 
 //create express app
@@ -20,17 +20,17 @@ app.config = config;
 app.server = http.createServer(app);
 
 //setup mongoose
-app.db = mongoose.createConnection(config.mongodb.uri);
-app.db.on('error', console.error.bind(console, 'mongoose connection error: '));
-app.db.once('open', function () {
+//app.db = mongoose.createConnection(config.mongodb.uri);
+//app.db.on('error', console.error.bind(console, 'mongoose connection error: '));
+//app.db.once('open', function () {
   //and... we have a data store
-});
+//});
 
 //config data models
-require('./models')(app, mongoose);
+//require('./models')(app, mongoose);
 
 //setup the session store
-app.sessionStore = new mongoStore({ url: config.mongodb.uri });
+//app.sessionStore = new mongoStore({ url: config.mongodb.uri });
 
 //config express in all environments
 app.configure(function(){
@@ -76,10 +76,10 @@ app.configure(function(){
   app.use(express.json());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
-  app.use(express.session({
-    secret: config.cryptoKey,
-    store: app.sessionStore
-  }));
+//  app.use(express.session({
+//    secret: config.cryptoKey,
+//    store: app.sessionStore
+//  }));
   app.use(passport.initialize());
   app.use(passport.session());
   helmet.defaults(app);
