@@ -44,3 +44,14 @@ exports.oauth = {
     secret: process.env.GOOGLE_OAUTH_SECRET || ''
   }
 };
+var AWSRegion = 'us-east-1';
+exports.AWSCredentials = {
+    "accessKeyId": "YOUR_ACCESS_KEY_ID"
+    , "secretAccessKey": "YOUR_SECRET_ACCESS_KEY"
+    , "region": AWSRegion
+};
+exports.AWSDynamoDBSession = {
+    table: 'sessions'
+    , reapInterval: 600000
+    , AWSRegion: AWSRegion
+};

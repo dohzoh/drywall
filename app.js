@@ -1,14 +1,16 @@
 'use strict';
 
 //dependencies
-var config = require('./config'),
-    express = require('express'),
-    mongoStore = require('connect-mongo')(express),
-    http = require('http'),
-    path = require('path'),
-    passport = require('passport'),
-//    mongoose = require('mongoose'),
-    helmet = require('helmet');
+var config = require('./config')
+    , express = require('express')
+    , http = require('http')
+    , path = require('path')
+    , passport = require('passport')
+    , helmet = require('helmet')
+    // add database objects
+    , AWS = require("aws-sdk")
+    , DynamoDBStore = require('connect-dynamodb')(express)
+;
 
 //create express app
 var app = express();
@@ -19,18 +21,8 @@ app.config = config;
 //setup the web server
 app.server = http.createServer(app);
 
-//setup mongoose
-//app.db = mongoose.createConnection(config.mongodb.uri);
-//app.db.on('error', console.error.bind(console, 'mongoose connection error: '));
-//app.db.once('open', function () {
-  //and... we have a data store
-//});
-
-//config data models
-//require('./models')(app, mongoose);
-
 //setup the session store
-//app.sessionStore = new mongoStore({ url: config.mongodb.uri });
+AWS.config.update(config.AWSCredentials);
 
 //config express in all environments
 app.configure(function(){
@@ -76,10 +68,11 @@ app.configure(function(){
   app.use(express.json());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
-//  app.use(express.session({
-//    secret: config.cryptoKey,
-//    store: app.sessionStore
-//  }));
+
+  app.use(express.session({
+    secret: config.cryptoKey
+    , store: new DynamoDBStore(config.AWSDynamoDBSession)
+  }));
   app.use(passport.initialize());
   app.use(passport.session());
   helmet.defaults(app);
