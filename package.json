@@ -21,6 +21,9 @@
     "passport-google-oauth": "~0.1.5",
     "helmet": "~0.1.2",
     "bcrypt": "~0.7.7"
+    , "aws-sdk": ""
+    , "connect-dynamodb": ""
+    , "vogels": ""
   },
   "devDependencies": {
     "grunt": "~0.4.1",

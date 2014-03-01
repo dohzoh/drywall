@@ -9,7 +9,7 @@ var passport = require('passport');
 var helmet = require('helmet');
     // add database objects
 var database = require("vogels");
-var AWS = database.AWS = require("aws-sdk");
+var AWS = database.AWS;
 var DynamoDBStore = require('connect-dynamodb')(express);
 
 //create express app
@@ -22,11 +22,12 @@ app.config = config;
 app.server = http.createServer(app);
 
 //setup the session store
-AWS.config.update(config.AWSCredentials);
-database.AWS.config.update(config.AWSCredentials);
+AWS.config.loadFromPath(config.AWSDynamoDBSession.AWSConfigPath);
 
-//config data models
-app.models = {};
+//config data models(emulate)
+app.db = {
+    models : {}
+};
 app.defines = {};
 require('./models')(app, database);
 //console.log(app.models);

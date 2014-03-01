@@ -14,13 +14,17 @@ module.exports = function(app, database) {
   require('./schema/Account')(app, database);
   require('./schema/LoginAttempt')(app, database);
 
-    database.createTables(app.defines, function (err) {
-        if(err) {
-            console.log('Error creating tables', err);
-        } else {
-            console.log('table are now created and active');
-        }
-    });
+    if(require("./config").dynamodb.createTables) {
+        console.info("create table start");
+
+        database.createTables(app.defines, function (err) {
+            if(err) {
+                console.log('Error creating tables', err);
+            } else {
+                console.log('table are now created and active');
+            }
+        });
+    }
 
 
 };

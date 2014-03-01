@@ -3,11 +3,26 @@
 module.exports = function(app, database) {
     var tableName = 'User';
     var Model = database.define(tableName, function (schema) {
+    // primary keys
         schema.UUID('id', {hashKey: true});
+        schema.Boolean('isActive', {rangeKey: true});
+    // basic data
+        schema.String("username")/*.required()*/;
+        schema.String('email')/*.required()*/;
+        schema.String('password');
+//        schema.String('resetPasswordToken');
+//        schema.Date('resetPasswordExpires');
+        schema.Date('created', {default: Date.now/*, secondaryIndex: true*/});
+//        schema.Date('updated', {default: Date.now});
+        // basic data
         schema.StringSet('content');
-        schema.Date('created', {default: Date.now});
+    // secondary keys
+//        schema.globalIndex('idUsernameIndex', { hashKey: 'id', rangeKey: "created"});
+//        schema.globalIndex('usernameIndex', { hashKey: 'username'});
+//        schema.globalIndex('emailIndex', { hashKey: 'email'});
+//        schema.globalIndex('resetPasswordIndex', { hashKey: 'resetPasswordToken', rangeKey: "resetPasswordExpires"});
     });
-    app.models[tableName] = Model;
+    app.db.models[tableName] = Model;
     app.defines[Model] = {readCapacity: 1, writeCapacity: 1};
 
 /*

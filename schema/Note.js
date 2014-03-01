@@ -9,11 +9,11 @@
 module.exports = function(app, database) {
     var tableName = 'Note';
     var Model = database.define(tableName, function (schema) {
-        schema.UUID('id', {hashKey: true});
+        schema.UUID('_id', {hashKey: true});
         schema.StringSet('content');
         schema.Date('created', {default: Date.now});
     });
-    app.models[tableName] = Model;
+    app.db.models[tableName] = Model;
     app.defines[Model] = {readCapacity: 1, writeCapacity: 1};
 /*
     Model.createTable({readCapacity: 1, writeCapacity: 1}, function(err, results){

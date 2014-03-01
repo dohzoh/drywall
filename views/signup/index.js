@@ -41,120 +41,43 @@ exports.signup = function(req, res){
       return workflow.emit('response');
     }
 
-    workflow.emit('duplicateUsernameCheck');
+    workflow.emit('createUser');
+
   });
 
-  workflow.on('duplicateUsernameCheck', function() {
-    req.app.db.models.User.findOne({ username: req.body.username }, function(err, user) {
-      if (err) {
-        return workflow.emit('exception', err);
-      }
-
-      if (user) {
-        workflow.outcome.errfor.username = 'username already taken';
-        return workflow.emit('response');
-      }
-
-      workflow.emit('duplicateEmailCheck');
-    });
-  });
-
-  workflow.on('duplicateEmailCheck', function() {
-    req.app.db.models.User.findOne({ email: req.body.email.toLowerCase() }, function(err, user) {
-      if (err) {
-        return workflow.emit('exception', err);
-      }
-
-      if (user) {
-        workflow.outcome.errfor.email = 'email already registered';
-        return workflow.emit('response');
-      }
-
-      workflow.emit('createUser');
-    });
-  });
-
-  workflow.on('createUser', function() {
-    req.app.db.models.User.encryptPassword(req.body.password, function(err, hash) {
-      if (err) {
-        return workflow.emit('exception', err);
-      }
-
-      var fieldsToSet = {
-        isActive: 'yes',
-        username: req.body.username,
-        email: req.body.email.toLowerCase(),
-        password: hash,
-        search: [
-          req.body.username,
-          req.body.email
-        ]
-      };
-      req.app.db.models.User.create(fieldsToSet, function(err, user) {
-        if (err) {
-          return workflow.emit('exception', err);
+    workflow.on('createUser', function() {
+        console.log("createUser");
+        var User = req.app.db.models.User;
+        console.log("createUser", User);
+        User.create(        {
+            username: req.body.username
+            , email: req.body.email.toLowerCase()
+            , password: req.body.password
+            , isActive: true
         }
+            /*        , {
+             expected: {
+             username: req.body.username
+             , email: req.body.email.toLowerCase()
+             }
+             }
+             */
+        , function(error, results){
+            if(!error){
+                console.log("createUser Success", results);
+                workflow.user = results.attr;
+                workflow.emit('logUserIn');
+            }
 
-        workflow.user = user;
-        workflow.emit('createAccount');
-      });
+            console.log(error);
+
+            return workflow.emit('exception', error);
+        });
+
     });
-  });
-
-  workflow.on('createAccount', function() {
-    var fieldsToSet = {
-      isVerified: req.app.get('require-account-verification') ? 'no' : 'yes',
-      'name.full': workflow.user.username,
-      user: {
-        id: workflow.user._id,
-        name: workflow.user.username
-      },
-      search: [
-        workflow.user.username
-      ]
-    };
-
-    req.app.db.models.Account.create(fieldsToSet, function(err, account) {
-      if (err) {
-        return workflow.emit('exception', err);
-      }
-
-      //update user with account
-      workflow.user.roles.account = account._id;
-      workflow.user.save(function(err, user) {
-        if (err) {
-          return workflow.emit('exception', err);
-        }
-
-        workflow.emit('sendWelcomeEmail');
-      });
-    });
-  });
-
-  workflow.on('sendWelcomeEmail', function() {
-    req.app.utility.sendmail(req, res, {
-      from: req.app.get('smtp-from-name') +' <'+ req.app.get('smtp-from-address') +'>',
-      to: req.body.email,
-      subject: 'Your '+ req.app.get('project-name') +' Account',
-      textPath: 'signup/email-text',
-      htmlPath: 'signup/email-html',
-      locals: {
-        username: req.body.username,
-        email: req.body.email,
-        loginURL: 'http://'+ req.headers.host +'/login/',
-        projectName: req.app.get('project-name')
-      },
-      success: function(message) {
-        workflow.emit('logUserIn');
-      },
-      error: function(err) {
-        console.log('Error Sending Welcome Email: '+ err);
-        workflow.emit('logUserIn');
-      }
-    });
-  });
 
   workflow.on('logUserIn', function() {
+      console.log("createUser");
     req._passport.instance.authenticate('local', function(err, user, info) {
       if (err) {
         return workflow.emit('exception', err);
@@ -179,6 +102,7 @@ exports.signup = function(req, res){
 
   workflow.emit('validate');
 };
+
 
 exports.signupTwitter = function(req, res, next) {
   req._passport.instance.authenticate('twitter', function(err, user, info) {
