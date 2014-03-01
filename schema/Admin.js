@@ -1,6 +1,15 @@
 'use strict';
 
-exports = module.exports = function(app, mongoose) {
+module.exports = function(app, database) {
+    var tableName = 'Status';
+    var Model = database.define(tableName, function (schema) {
+        schema.UUID('id', {hashKey: true});
+        schema.StringSet('content');
+        schema.Date('created', {default: Date.now});
+    });
+    app.models[tableName] = Model;
+    app.defines[Model] = {readCapacity: 1, writeCapacity: 1};
+/*
   var adminSchema = new mongoose.Schema({
     user: {
       id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
@@ -60,4 +69,5 @@ exports = module.exports = function(app, mongoose) {
   adminSchema.index({ search: 1 });
   adminSchema.set('autoIndex', (app.get('env') === 'development'));
   app.db.model('Admin', adminSchema);
+*/
 };

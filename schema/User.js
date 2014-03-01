@@ -1,6 +1,16 @@
 'use strict';
 
-exports = module.exports = function(app, mongoose) {
+module.exports = function(app, database) {
+    var tableName = 'User';
+    var Model = database.define(tableName, function (schema) {
+        schema.UUID('id', {hashKey: true});
+        schema.StringSet('content');
+        schema.Date('created', {default: Date.now});
+    });
+    app.models[tableName] = Model;
+    app.defines[Model] = {readCapacity: 1, writeCapacity: 1};
+
+/*
   var userSchema = new mongoose.Schema({
     username: { type: String, unique: true },
     password: String,
@@ -71,4 +81,5 @@ exports = module.exports = function(app, mongoose) {
   userSchema.index({ search: 1 });
   userSchema.set('autoIndex', (app.get('env') === 'development'));
   app.db.model('User', userSchema);
+*/
 };

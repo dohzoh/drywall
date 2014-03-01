@@ -1,6 +1,15 @@
 'use strict';
 
-exports = module.exports = function(app, mongoose) {
+module.exports = function(app, database) {
+    var tableName = 'LoginAttempt';
+    var Model = database.define(tableName, function (schema) {
+        schema.UUID('id', {hashKey: true});
+        schema.StringSet('content');
+        schema.Date('created', {default: Date.now});
+    });
+    app.models[tableName] = Model;
+    app.defines[Model] = {readCapacity: 1, writeCapacity: 1};
+/*
   var attemptSchema = new mongoose.Schema({
     ip: { type: String, default: '' },
     user: { type: String, default: '' },
@@ -10,4 +19,5 @@ exports = module.exports = function(app, mongoose) {
   attemptSchema.index({ user: 1 });
   attemptSchema.set('autoIndex', (app.get('env') === 'development'));
   app.db.model('LoginAttempt', attemptSchema);
+*/
 };

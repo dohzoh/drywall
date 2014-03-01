@@ -1,7 +1,16 @@
 'use strict';
 
-exports = module.exports = function(app, mongoose) {
-  var statusSchema = new mongoose.Schema({
+module.exports = function(app, database) {
+    var tableName = 'Status';
+    var Model = database.define(tableName, function (schema) {
+        schema.UUID('id', {hashKey: true});
+        schema.StringSet('content');
+        schema.Date('created', {default: Date.now});
+    });
+    app.models[tableName] = Model;
+    app.defines[Model] = {readCapacity: 1, writeCapacity: 1};
+
+/*  var statusSchema = new mongoose.Schema({
     _id: { type: String },
     pivot: { type: String, default: '' },
     name: { type: String, default: '' }
@@ -11,4 +20,5 @@ exports = module.exports = function(app, mongoose) {
   statusSchema.index({ name: 1 });
   statusSchema.set('autoIndex', (app.get('env') === 'development'));
   app.db.model('Status', statusSchema);
+*/
 };

@@ -44,12 +44,17 @@ exports.oauth = {
     secret: process.env.GOOGLE_OAUTH_SECRET || ''
   }
 };
+
 var AWSRegion = 'us-east-1';
 exports.AWSCredentials = {
     "accessKeyId": "YOUR_ACCESS_KEY_ID"
     , "secretAccessKey": "YOUR_SECRET_ACCESS_KEY"
     , "region": AWSRegion
 };
+
+/**
+ * @see https://github.com/ca98am79/connect-dynamodb#options
+ */
 exports.AWSDynamoDBSession = {
     table: 'sessions'
     , reapInterval: 600000

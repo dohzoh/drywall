@@ -1,6 +1,15 @@
 'use strict';
 
-exports = module.exports = function(app, mongoose) {
+module.exports = function(app, database) {
+    var tableName = 'Category';
+    var Model = database.define(tableName, function (schema) {
+        schema.UUID('id', {hashKey: true});
+        schema.StringSet('content');
+        schema.Date('created', {default: Date.now});
+    });
+    app.models[tableName] = Model;
+    app.defines[Model] = {readCapacity: 1, writeCapacity: 1};
+/*
   var categorySchema = new mongoose.Schema({
     _id: { type: String },
     pivot: { type: String, default: '' },
@@ -11,4 +20,5 @@ exports = module.exports = function(app, mongoose) {
   categorySchema.index({ name: 1 });
   categorySchema.set('autoIndex', (app.get('env') === 'development'));
   app.db.model('Category', categorySchema);
+*/
 };

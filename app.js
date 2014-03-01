@@ -1,16 +1,16 @@
 'use strict';
 
 //dependencies
-var config = require('./config')
-    , express = require('express')
-    , http = require('http')
-    , path = require('path')
-    , passport = require('passport')
-    , helmet = require('helmet')
+var config = require('./config');
+var express = require('express');
+var http = require('http');
+var path = require('path');
+var passport = require('passport');
+var helmet = require('helmet');
     // add database objects
-    , AWS = require("aws-sdk")
-    , DynamoDBStore = require('connect-dynamodb')(express)
-;
+var database = require("vogels");
+var AWS = database.AWS = require("aws-sdk");
+var DynamoDBStore = require('connect-dynamodb')(express);
 
 //create express app
 var app = express();
@@ -23,6 +23,13 @@ app.server = http.createServer(app);
 
 //setup the session store
 AWS.config.update(config.AWSCredentials);
+database.AWS.config.update(config.AWSCredentials);
+
+//config data models
+app.models = {};
+app.defines = {};
+require('./models')(app, database);
+//console.log(app.models);
 
 //config express in all environments
 app.configure(function(){
