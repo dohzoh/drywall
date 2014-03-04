@@ -1,213 +1,484 @@
-var path = require('path');
+/**
+ * Gruntfile
+ *
+ * If you created your Sails app with `sails new foo --linker`, 
+ * the following files will be automatically injected (in order)
+ * into the EJS and HTML files in your `views` and `assets` folders.
+ *
+ * At the top part of this file, you'll find a few of the most commonly
+ * configured options, but Sails' integration with Grunt is also fully
+ * customizable.  If you'd like to work with your assets differently 
+ * you can change this file to do anything you like!
+ *
+ * More information on using Grunt to work with static assets:
+ * http://gruntjs.com/configuring-tasks
+ */
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
+
+
+
+  /**
+   * CSS files to inject in order
+   * (uses Grunt-style wildcard/glob/splat expressions)
+   *
+   * By default, Sails also supports LESS in development and production.
+   * To use SASS/SCSS, Stylus, etc., edit the `sails-linker:devStyles` task 
+   * below for more options.  For this to work, you may need to install new 
+   * dependencies, e.g. `npm install grunt-contrib-sass`
+   */
+
+  var cssFilesToInject = [
+    'linker/**/*.css'
+  ];
+
+
+  /**
+   * Javascript files to inject in order
+   * (uses Grunt-style wildcard/glob/splat expressions)
+   *
+   * To use client-side CoffeeScript, TypeScript, etc., edit the 
+   * `sails-linker:devJs` task below for more options.
+   */
+
+  var jsFilesToInject = [
+
+    // Below, as a demonstration, you'll see the built-in dependencies 
+    // linked in the proper order order
+
+    // Bring in the socket.io client
+    'linker/js/socket.io.js',
+
+    // then beef it up with some convenience logic for talking to Sails.js
+    'linker/js/sails.io.js',
+
+    // A simpler boilerplate library for getting you up and running w/ an
+    // automatic listener for incoming messages from Socket.io.
+    'linker/js/app.js',
+
+    // *->    put other dependencies here   <-*
+
+    // All of the rest of your app scripts imported here
+    'linker/**/*.js'
+  ];
+
+
+  /**
+   * Client-side HTML templates are injected using the sources below
+   * The ordering of these templates shouldn't matter.
+   * (uses Grunt-style wildcard/glob/splat expressions)
+   * 
+   * By default, Sails uses JST templates and precompiles them into 
+   * functions for you.  If you want to use jade, handlebars, dust, etc.,
+   * edit the relevant sections below.
+   */
+
+  var templateFilesToInject = [
+    'linker/**/*.html'
+  ];
+
+
+
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  //
+  // DANGER:
+  //
+  // With great power comes great responsibility.
+  //
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+
+  // Modify css file injection paths to use 
+  cssFilesToInject = cssFilesToInject.map(function (path) {
+    return '.tmp/public/' + path;
+  });
+
+  // Modify js file injection paths to use 
+  jsFilesToInject = jsFilesToInject.map(function (path) {
+    return '.tmp/public/' + path;
+  });
+  
+  
+  templateFilesToInject = templateFilesToInject.map(function (path) {
+    return 'assets/' + path;
+  });
+
+
+  // Get path to core grunt dependencies from Sails
+  var depsPath = grunt.option('gdsrc') || 'node_modules/sails/node_modules';
+  grunt.loadTasks(depsPath + '/grunt-contrib-clean/tasks');
+  grunt.loadTasks(depsPath + '/grunt-contrib-copy/tasks');
+  grunt.loadTasks(depsPath + '/grunt-contrib-concat/tasks');
+  grunt.loadTasks(depsPath + '/grunt-sails-linker/tasks');
+  grunt.loadTasks(depsPath + '/grunt-contrib-jst/tasks');
+  grunt.loadTasks(depsPath + '/grunt-contrib-watch/tasks');
+  grunt.loadTasks(depsPath + '/grunt-contrib-uglify/tasks');
+  grunt.loadTasks(depsPath + '/grunt-contrib-cssmin/tasks');
+  grunt.loadTasks(depsPath + '/grunt-contrib-less/tasks');
+  grunt.loadTasks(depsPath + '/grunt-contrib-coffee/tasks');
+
+  // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+
     copy: {
-      vendor: {
+      dev: {
         files: [
           {
-            expand: true, cwd: 'bower_components/bootstrap/',
-            src: ['js/**', 'less/**'], dest: 'public/vendor/bootstrap/'
-          },
+          expand: true,
+          cwd: './assets',
+          src: ['**/*.!(coffee)'],
+          dest: '.tmp/public'
+        }
+        ]
+      },
+      build: {
+        files: [
           {
-            expand: true, cwd: 'bower_components/backbone/',
-            src: ['backbone.js'], dest: 'public/vendor/backbone/'
-          },
+          expand: true,
+          cwd: '.tmp/public',
+          src: ['**/*'],
+          dest: 'www'
+        }
+        ]
+      }
+    },
+
+    clean: {
+      dev: ['.tmp/public/**'],
+      build: ['www']
+    },
+
+    jst: {
+      dev: {
+
+        // To use other sorts of templates, specify the regexp below:
+        // options: {
+        //   templateSettings: {
+        //     interpolate: /\{\{(.+?)\}\}/g
+        //   }
+        // },
+
+        files: {
+          '.tmp/public/jst.js': templateFilesToInject
+        }
+      }
+    },
+
+    less: {
+      dev: {
+        files: [
           {
-            expand: true, cwd: 'bower_components/font-awesome/',
-            src: ['fonts/**', 'less/**'], dest: 'public/vendor/font-awesome/'
-          },
+          expand: true,
+          cwd: 'assets/styles/',
+          src: ['*.less'],
+          dest: '.tmp/public/styles/',
+          ext: '.css'
+        }, {
+          expand: true,
+          cwd: 'assets/linker/styles/',
+          src: ['*.less'],
+          dest: '.tmp/public/linker/styles/',
+          ext: '.css'
+        }
+        ]
+      }
+    },
+    
+    coffee: {
+      dev: {
+        options:{
+          bare:true
+        },
+        files: [
           {
-            expand: true, cwd: 'bower_components/html5shiv/dist/',
-            src: ['html5shiv.js'], dest: 'public/vendor/html5shiv/'
-          },
-          {
-            expand: true, cwd: 'bower_components/jquery/dist/',
-            src: ['jquery.js'], dest: 'public/vendor/jquery/'
-          },
-          {
-            expand: true, cwd: 'bower_components/momentjs/',
-            src: ['moment.js'], dest: 'public/vendor/momentjs/'
-          },
-          {
-            expand: true, cwd: 'bower_components/respond/src/',
-            src: ['respond.js'], dest: 'public/vendor/respond/'
-          },
-          {
-            expand: true, cwd: 'bower_components/underscore/',
-            src: ['underscore.js'], dest: 'public/vendor/underscore/'
+            expand: true,
+            cwd: 'assets/js/',
+            src: ['**/*.coffee'],
+            dest: '.tmp/public/js/',
+            ext: '.js'
+          }, {
+            expand: true,
+            cwd: 'assets/linker/js/',
+            src: ['**/*.coffee'],
+            dest: '.tmp/public/linker/js/',
+            ext: '.js'
           }
         ]
       }
     },
-    concurrent: {
-      dev: {
-        tasks: ['nodemon', 'watch'],
-        options: {
-          logConcurrentOutput: true
-        }
-      }
-    },
-    nodemon: {
-      dev: {
-        script: 'app.js',
-        options: {
-          ignore: [
-            'node_modules/**',
-            'public/**'
-          ],
-          ext: 'js'
-        }
-      }
-    },
-    watch: {
-      clientJS: {
-         files: [
-          'public/layouts/**/*.js', '!public/layouts/**/*.min.js',
-          'public/views/**/*.js', '!public/views/**/*.min.js'
-         ],
-         tasks: ['newer:uglify', 'newer:jshint:client']
-      },
-      serverJS: {
-         files: ['views/**/*.js'],
-         tasks: ['newer:jshint:server']
-      },
-      clientLess: {
-         files: [
-          'public/layouts/**/*.less',
-          'public/views/**/*.less',
-          'public/less/**/*.less'
-         ],
-         tasks: ['newer:less']
-      }
-    },
-    uglify: {
-      options: {
-        sourceMap: true,
-        sourceMapName: function(filePath) {
-          return filePath + '.map';
-        }
-      },
-      layouts: {
-        files: {
-          'public/layouts/core.min.js': [
-            'public/vendor/jquery/jquery.js',
-            'public/vendor/underscore/underscore.js',
-            'public/vendor/backbone/backbone.js',
-            'public/vendor/bootstrap/js/affix.js',
-            'public/vendor/bootstrap/js/alert.js',
-            'public/vendor/bootstrap/js/button.js',
-            'public/vendor/bootstrap/js/carousel.js',
-            'public/vendor/bootstrap/js/collapse.js',
-            'public/vendor/bootstrap/js/dropdown.js',
-            'public/vendor/bootstrap/js/modal.js',
-            'public/vendor/bootstrap/js/tooltip.js',
-            'public/vendor/bootstrap/js/popover.js',
-            'public/vendor/bootstrap/js/scrollspy.js',
-            'public/vendor/bootstrap/js/tab.js',
-            'public/vendor/bootstrap/js/transition.js',
-            'public/vendor/momentjs/moment.js',
-            'public/layouts/core.js'
-          ],
-          'public/layouts/ie-sucks.min.js': [
-            'public/vendor/html5shiv/html5shiv.js',
-            'public/vendor/respond/respond.js',
-            'public/layouts/ie-sucks.js'
-          ],
-          'public/layouts/admin.min.js': ['public/layouts/admin.js']
-        }
-      },
-      views: {
-        files: [{
-          expand: true,
-          cwd: 'public/views/',
-          src: ['**/*.js', '!**/*.min.js'],
-          dest: 'public/views/',
-          ext: '.min.js'
-        }]
-      }
-    },
-    jshint: {
-      client: {
-        options: {
-          jshintrc: '.jshintrc-client',
-          ignores: [
-            'public/layouts/**/*.min.js',
-            'public/views/**/*.min.js'
-          ]
-        },
-        src: [
-          'public/layouts/**/*.js',
-          'public/views/**/*.js'
-        ]
-      },
-      server: {
-        options: {
-          jshintrc: '.jshintrc-server'
-        },
-        src: [
-          'schema/**/*.js',
-          'views/**/*.js'
-        ]
-      }
-    },
-    less: {
-      options: {
-        compress: true
-      },
-      layouts: {
-        files: {
-          'public/layouts/core.min.css': [
-            'public/less/bootstrap-build.less',
-            'public/less/font-awesome-build.less',
-            'public/layouts/core.less'
-          ],
-          'public/layouts/admin.min.css': ['public/layouts/admin.less']
-        }
-      },
-      views: {
-        files: [{
-          expand: true,
-          cwd: 'public/views/',
-          src: ['**/*.less'],
-          dest: 'public/views/',
-          ext: '.min.css'
-        }]
-      }
-    },
-    clean: {
+
+    concat: {
       js: {
-        src: [
-          'public/layouts/**/*.min.js',
-          'public/layouts/**/*.min.js.map',
-          'public/views/**/*.min.js',
-          'public/views/**/*.min.js.map'
-        ]
+        src: jsFilesToInject,
+        dest: '.tmp/public/concat/production.js'
       },
       css: {
-        src: [
-          'public/layouts/**/*.min.css',
-          'public/views/**/*.min.css'
-        ]
+        src: cssFilesToInject,
+        dest: '.tmp/public/concat/production.css'
+      }
+    },
+
+    uglify: {
+      dist: {
+        src: ['.tmp/public/concat/production.js'],
+        dest: '.tmp/public/min/production.js'
+      }
+    },
+
+    cssmin: {
+      dist: {
+        src: ['.tmp/public/concat/production.css'],
+        dest: '.tmp/public/min/production.css'
+      }
+    },
+
+    'sails-linker': {
+
+      devJs: {
+        options: {
+          startTag: '<!--SCRIPTS-->',
+          endTag: '<!--SCRIPTS END-->',
+          fileTmpl: '<script src="%s"></script>',
+          appRoot: '.tmp/public'
+        },
+        files: {
+          '.tmp/public/**/*.html': jsFilesToInject,
+          'views/**/*.html': jsFilesToInject,
+          'views/**/*.ejs': jsFilesToInject
+        }
       },
-      vendor: {
-        src: ['public/vendor/**']
+
+      prodJs: {
+        options: {
+          startTag: '<!--SCRIPTS-->',
+          endTag: '<!--SCRIPTS END-->',
+          fileTmpl: '<script src="%s"></script>',
+          appRoot: '.tmp/public'
+        },
+        files: {
+          '.tmp/public/**/*.html': ['.tmp/public/min/production.js'],
+          'views/**/*.html': ['.tmp/public/min/production.js'],
+          'views/**/*.ejs': ['.tmp/public/min/production.js']
+        }
+      },
+
+      devStyles: {
+        options: {
+          startTag: '<!--STYLES-->',
+          endTag: '<!--STYLES END-->',
+          fileTmpl: '<link rel="stylesheet" href="%s">',
+          appRoot: '.tmp/public'
+        },
+
+        // cssFilesToInject defined up top
+        files: {
+          '.tmp/public/**/*.html': cssFilesToInject,
+          'views/**/*.html': cssFilesToInject,
+          'views/**/*.ejs': cssFilesToInject
+        }
+      },
+
+      prodStyles: {
+        options: {
+          startTag: '<!--STYLES-->',
+          endTag: '<!--STYLES END-->',
+          fileTmpl: '<link rel="stylesheet" href="%s">',
+          appRoot: '.tmp/public'
+        },
+        files: {
+          '.tmp/public/index.html': ['.tmp/public/min/production.css'],
+          'views/**/*.html': ['.tmp/public/min/production.css'],
+          'views/**/*.ejs': ['.tmp/public/min/production.css']
+        }
+      },
+
+      // Bring in JST template object
+      devTpl: {
+        options: {
+          startTag: '<!--TEMPLATES-->',
+          endTag: '<!--TEMPLATES END-->',
+          fileTmpl: '<script type="text/javascript" src="%s"></script>',
+          appRoot: '.tmp/public'
+        },
+        files: {
+          '.tmp/public/index.html': ['.tmp/public/jst.js'],
+          'views/**/*.html': ['.tmp/public/jst.js'],
+          'views/**/*.ejs': ['.tmp/public/jst.js']
+        }
+      },
+
+
+      /*******************************************
+       * Jade linkers (TODO: clean this up)
+       *******************************************/
+
+      devJsJADE: {
+        options: {
+          startTag: '// SCRIPTS',
+          endTag: '// SCRIPTS END',
+          fileTmpl: 'script(type="text/javascript", src="%s")',
+          appRoot: '.tmp/public'
+        },
+        files: {
+          'views/**/*.jade': jsFilesToInject
+        }
+      },
+
+      prodJsJADE: {
+        options: {
+          startTag: '// SCRIPTS',
+          endTag: '// SCRIPTS END',
+          fileTmpl: 'script(type="text/javascript", src="%s")',
+          appRoot: '.tmp/public'
+        },
+        files: {
+          'views/**/*.jade': ['.tmp/public/min/production.js']
+        }
+      },
+
+      devStylesJADE: {
+        options: {
+          startTag: '// STYLES',
+          endTag: '// STYLES END',
+          fileTmpl: 'link(rel="stylesheet", href="%s")',
+          appRoot: '.tmp/public'
+        },
+        files: {
+          'views/**/*.jade': cssFilesToInject
+        }
+      },
+
+      prodStylesJADE: {
+        options: {
+          startTag: '// STYLES',
+          endTag: '// STYLES END',
+          fileTmpl: 'link(rel="stylesheet", href="%s")',
+          appRoot: '.tmp/public'
+        },
+        files: {
+          'views/**/*.jade': ['.tmp/public/min/production.css']
+        }
+      },
+
+      // Bring in JST template object
+      devTplJADE: {
+        options: {
+          startTag: '// TEMPLATES',
+          endTag: '// TEMPLATES END',
+          fileTmpl: 'script(type="text/javascript", src="%s")',
+          appRoot: '.tmp/public'
+        },
+        files: {
+          'views/**/*.jade': ['.tmp/public/jst.js']
+        }
+      }
+      /************************************
+       * Jade linker end
+       ************************************/
+    },
+
+    watch: {
+      api: {
+
+        // API files to watch:
+        files: ['api/**/*']
+      },
+      assets: {
+
+        // Assets to watch:
+        files: ['assets/**/*'],
+
+        // When assets are changed:
+        tasks: ['compileAssets', 'linkAssets']
       }
     }
   });
 
-  grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-less');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-concurrent');
-  grunt.loadNpmTasks('grunt-nodemon');
-  grunt.loadNpmTasks('grunt-newer');
+  // When Sails is lifted:
+  grunt.registerTask('default', [
+    'compileAssets',
+    'linkAssets',
+    'watch'
+  ]);
 
-  grunt.registerTask('default', ['copy:vendor', 'newer:uglify', 'newer:less', 'concurrent']);
-  grunt.registerTask('build', ['copy:vendor', 'uglify', 'less']);
-  grunt.registerTask('lint', ['jshint']);
+  grunt.registerTask('compileAssets', [
+    'clean:dev',
+    'jst:dev',
+    'less:dev',
+    'copy:dev',    
+    'coffee:dev'
+  ]);
+
+  grunt.registerTask('linkAssets', [
+
+    // Update link/script/template references in `assets` index.html
+    'sails-linker:devJs',
+    'sails-linker:devStyles',
+    'sails-linker:devTpl',
+    'sails-linker:devJsJADE',
+    'sails-linker:devStylesJADE',
+    'sails-linker:devTplJADE'
+  ]);
+
+
+  // Build the assets into a web accessible folder.
+  // (handy for phone gap apps, chrome extensions, etc.)
+  grunt.registerTask('build', [
+    'compileAssets',
+    'linkAssets',
+    'clean:build',
+    'copy:build'
+  ]);
+
+  // When sails is lifted in production
+  grunt.registerTask('prod', [
+    'clean:dev',
+    'jst:dev',
+    'less:dev',
+    'copy:dev',
+    'coffee:dev',
+    'concat',
+    'uglify',
+    'cssmin',
+    'sails-linker:prodJs',
+    'sails-linker:prodStyles',
+    'sails-linker:devTpl',
+    'sails-linker:prodJsJADE',
+    'sails-linker:prodStylesJADE',
+    'sails-linker:devTplJADE'
+  ]);
+
+  // When API files are changed:
+  // grunt.event.on('watch', function(action, filepath) {
+  //   grunt.log.writeln(filepath + ' has ' + action);
+
+  //   // Send a request to a development-only endpoint on the server
+  //   // which will reuptake the file that was changed.
+  //   var baseurl = grunt.option('baseurl');
+  //   var gruntSignalRoute = grunt.option('signalpath');
+  //   var url = baseurl + gruntSignalRoute + '?action=' + action + '&filepath=' + filepath;
+
+  //   require('http').get(url)
+  //   .on('error', function(e) {
+  //     console.error(filepath + ' has ' + action + ', but could not signal the Sails.js server: ' + e.message);
+  //   });
+  // });
 };
