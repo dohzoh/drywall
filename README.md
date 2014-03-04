@@ -1,54 +1,6 @@
 Drywall DynamoDB
 =============
 
-A website and user system for Node.js. What you create with Drywall is more important than Drywall. [See a bird's eye view.](http://jedireza.github.io/drywall/)
-
-[![Dependency Status](https://david-dm.org/jedireza/drywall.png)](https://david-dm.org/jedireza/drywall)
-[![devDependency Status](https://david-dm.org/jedireza/drywall/dev-status.png)](https://david-dm.org/jedireza/drywall#info=devDependencies)
-
-Technology
-------------
-
-| On The Server | On The Client  | Development |
-| ------------- | -------------- | ----------- |
-| Express       | Bootstrap      | Grunt       |
-| Jade          | Backbone.js    | Bower       |
-| EmailJS        | jQuery         |             |
-| Passport      | Underscore.js  |             |
-| Async         | Font-Awesome   |             |
-| Amazon SDK       | Moment.js      |             |
-| Vogels       |       |             |
-| Connect-DynamoDB       |       |             |
-
-
-Requirements
-------------
-
-You need [Node.js](http://nodejs.org/download/) and Amazon DynamoDB installed and running.
-
-We use [Grunt](http://gruntjs.com/) as our task runner. Get the CLI (command line interface).
-
-```bash
-$ npm install grunt-cli -g
-```
-
-We use [Bower](http://bower.io/) as our front-end package manager. Get the CLI (command line interface).
-
-```bash
-$ npm install bower -g
-```
-
-
-Installation
-------------
-
-```bash
-$ git clone https://github.com/dohzoh/drywall.git && cd ./drywall && git checkout dynamodb
-$ npm install && bower install
-$ mv ./config.example.js ./config.js
-$ mv ./credentials.example.js ./credentials.js   # and put your amazon accesskey
-$ grunt
-```
 
 License
 ------------
