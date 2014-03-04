@@ -33,6 +33,6 @@ module.exports[404] = function pageNotFound(req, res) {
 
     // Otherwise, serve the `views/404.*` page
     res.render(viewFilePath);
-  });
+    });
 
 };

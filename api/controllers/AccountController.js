@@ -1,5 +1,5 @@
 /**
- * LoginController
+ * AccountController
  *
  * @module      :: Controller
  * @description	:: A set of functions called `actions`.
@@ -20,8 +20,8 @@ module.exports = {
   
   /**
    * Action blueprints:
-   *    `/login/index`
-   *    `/login`
+   *    `/account/index`
+   *    `/account`
    */
    index: function (req, res) {
     
@@ -34,22 +34,24 @@ module.exports = {
 
   /**
    * Action blueprints:
-   *    `/login/forgot`
+   *    `/account/settings`
    */
-   forgot: function (req, res) {
+   settings: function (req, res) {
     
     // Send a JSON response
     return res.view({
-      hello: 'world'
+        data:
+        {account: "testaccount"
+        , user: "testuser"}
     });
   },
 
 
   /**
    * Action blueprints:
-   *    `/login/reset`
+   *    `/account/verification`
    */
-   reset: function (req, res) {
+   verification: function (req, res) {
     
     // Send a JSON response
     return res.view({
@@ -62,7 +64,7 @@ module.exports = {
 
   /**
    * Overrides for the settings in `config/controllers.js`
-   * (specific to LoginController)
+   * (specific to AccountController)
    */
   _config: {}
 

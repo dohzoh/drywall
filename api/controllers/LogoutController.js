@@ -1,5 +1,5 @@
 /**
- * LoginController
+ * LogoutController
  *
  * @module      :: Controller
  * @description	:: A set of functions called `actions`.
@@ -20,41 +20,13 @@ module.exports = {
   
   /**
    * Action blueprints:
-   *    `/login/index`
-   *    `/login`
+   *    `/logout/index`
+   *    `/logout`
    */
    index: function (req, res) {
     
     // Send a JSON response
-    return res.view({
-      hello: 'world'
-    });
-  },
-
-
-  /**
-   * Action blueprints:
-   *    `/login/forgot`
-   */
-   forgot: function (req, res) {
-    
-    // Send a JSON response
-    return res.view({
-      hello: 'world'
-    });
-  },
-
-
-  /**
-   * Action blueprints:
-   *    `/login/reset`
-   */
-   reset: function (req, res) {
-    
-    // Send a JSON response
-    return res.view({
-      hello: 'world'
-    });
+    res.redirect('/', 301);
   },
 
 
@@ -62,7 +34,7 @@ module.exports = {
 
   /**
    * Overrides for the settings in `config/controllers.js`
-   * (specific to LoginController)
+   * (specific to LogoutController)
    */
   _config: {}
 
