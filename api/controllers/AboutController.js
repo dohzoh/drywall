@@ -28,8 +28,8 @@ module.exports = {
 
   
 	, index: function(req, res) {
-        console.info(req);
-        console.info(res);
+//        console.info(req);
+//        console.info(res);
 		return res.view({
 			corndogs: [{name: 'Hank the Corndog'}, {name: 'Lenny the Corndog'}]
 		});
