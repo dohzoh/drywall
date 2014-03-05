@@ -14,6 +14,7 @@
  *
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
+var passport = require('passport');
 
 module.exports = {
     
@@ -23,13 +24,18 @@ module.exports = {
    *    `/login/index`
    *    `/login`
    */
-   index: function (req, res) {
-    
-    // Send a JSON response
-    return res.view({
-      hello: 'world'
-    });
-  },
+    index: function (req, res) {
+
+        if(req.method !== 'POST'){
+            // Send a Default View
+            return res.view();
+        }
+        else{
+            // Send a JSON Response
+            return res.json({"success": true});
+        }
+
+    },
 
 
   /**
@@ -55,8 +61,32 @@ module.exports = {
     return res.view({
       hello: 'world'
     });
-  },
+  }
 
+
+    , _process: function(req, res, cb)
+    {
+        passport.authenticate('local', function(err, user, info)
+        {
+            if ((err) || (!user))
+            {
+                res.redirect('/login');
+                return;
+            }
+
+            req.logIn(user, function(err)
+            {
+                if (err)
+                {
+                    res.view();
+                    return;
+                }
+
+                res.redirect('/');
+                return;
+            });
+        })(req, res);
+    }
 
 
 
@@ -64,7 +94,7 @@ module.exports = {
    * Overrides for the settings in `config/controllers.js`
    * (specific to LoginController)
    */
-  _config: {}
+  , _config: {}
 
   
 };
