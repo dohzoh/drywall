@@ -8,8 +8,17 @@
         "grunt": "0.4.1",
         "sails-disk": "~0.9.0",
         "ejs": "0.8.4",
-        "optimist": "0.3.4"
-    	, "jade": "~1.1.5"
+        "optimist": "0.3.4",
+		"async": "~0.2.9",
+		"emailjs": "~0.3.6",
+		"jade": "~1.1.5",
+		"passport": "~0.2.0",
+		"passport-local": "~0.1.6",
+		"helmet": "~0.1.2",
+		"bcrypt": "~0.7.7"
+		, "aws-sdk": ""
+		, "connect-dynamodb": ""
+		, "vogels": ""		
     },
     "scripts": {
         "start": "node app.js",
