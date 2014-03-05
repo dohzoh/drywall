@@ -23,12 +23,33 @@ module.exports = {
    *    `/signup/index`
    *    `/signup`
    */
-   index: function (req, res) {
-    
+    index: function (req, res) {
+console.log("req.body", req.body);
+        if(req.method !== 'POST'){
+            return res.view();
+        }
+        else{
+            return res.json({"success": true});
+        }
+    },
+
+
+  /**
+   * Action blueprints:
+   *    `/signup/add`
+   */
+   add: function (req, res) {
+console.log("req.method", req.method);
+console.log("req.body", req.body);
+//res.send({redirect: '/'});
+
+  res.writeHead(302, {
+      'Location': '/'
+  });
+  res.end();
+//res.redirect("/");
     // Send a JSON response
-    return res.view({
-      hello: 'world'
-    });
+//    return res.view(req.body);
   },
 
 
