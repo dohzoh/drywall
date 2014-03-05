@@ -14,7 +14,7 @@
  *
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
-var passport = require('passport');
+//var passport = require('passport');
 
 module.exports = {
     
@@ -45,9 +45,14 @@ module.exports = {
    forgot: function (req, res) {
     
     // Send a JSON response
-    return res.view({
-      hello: 'world'
-    });
+      if(req.method !== 'POST'){
+          // Send a Default View
+          return res.view();
+      }
+      else{
+          // Send a JSON Response
+          return res.json({"success": true});
+      }
   },
 
 
@@ -63,7 +68,7 @@ module.exports = {
     });
   }
 
-
+/*
     , _process: function(req, res, cb)
     {
         passport.authenticate('local', function(err, user, info)
@@ -88,7 +93,7 @@ module.exports = {
         })(req, res);
     }
 
-
+*/
 
   /**
    * Overrides for the settings in `config/controllers.js`

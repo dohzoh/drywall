@@ -16,22 +16,25 @@
  */
 
 module.exports = {
-    
-  
+
+
+    index: function(req, res) {
+//        console.info(req);
+//        console.info(res);
+    if(req.method !== 'POST'){
+        return res.view();
+    }
+    else{
+        return res.json({"success": true});
+    }
+}
 
 
   /**
    * Overrides for the settings in `config/controllers.js`
    * (specific to ContactController)
    */
-  _config: {}
+  , _config: {}
 
-    , index: function(req, res) {
-//        console.info(req);
-//        console.info(res);
-        return res.view({
-            corndogs: [{name: 'Hank the Corndog'}, {name: 'Lenny the Corndog'}]
-        });
-    }
 
 };
