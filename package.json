@@ -18,6 +18,7 @@
         , "connect": ""
         , "connect-dynamodb": ""
         , "vogels": ""
+        , "underscore": ""
         , "authom": ""
     },
     "scripts": {

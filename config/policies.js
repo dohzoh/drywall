@@ -17,6 +17,8 @@ module.exports.policies = {
   // Default policy for all controllers and actions
   // (`true` allows public access) 
     '*': "isAuthenticated"
+//    , 'account':{'*': false}
+//    , 'admin':{'*': false}
 
     , 'index':{'*': true}
     , 'about':{'*': true}
