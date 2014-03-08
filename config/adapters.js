@@ -8,7 +8,7 @@
  * Keep in mind that options you define directly in your model definitions
  * will override these settings.
  *
- * For more information on adapter configuration, check out:
+ * For more information on adapter configuration, check out:b
  * http://sailsjs.org/#documentation
  */
 
@@ -16,13 +16,20 @@ module.exports.adapters = {
 
   // If you leave the adapter config unspecified 
   // in a model definition, 'default' will be used.
-  'default': 'disk',
+  'default': 'disk'
+//   , 'default': 'disk'
 
   // Persistent adapter for DEVELOPMENT ONLY
   // (data is preserved when the server shuts down)
-  disk: {
-    module: 'sails-disk'
-  },
+    , disk: {
+        module: 'sails-disk'
+    }
+
+    , dynamodb: {
+        module: 'sails-dynamo'
+    }
+
+    ,
 
   // MySQL is the world's most popular relational database.
   // Learn more: http://en.wikipedia.org/wiki/MySQL

@@ -26,11 +26,19 @@ module.exports = {
    */
     index: function (req, res) {
 
+
+      if ( typeof req.session !== 'undefined' && req.session.authenticated) {
+          console.log('authentication succes');
+          res.redirect("/admin/", 302);
+          return;
+      }
+
         if(req.method !== 'POST'){
             // Send a Default View
             return res.view();
         }
         else{
+            req.session.authenticated = true;
             // Send a JSON Response
             return res.json({"success": true});
         }

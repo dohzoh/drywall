@@ -24,7 +24,7 @@ module.exports = {
    *    `/signup`
    */
     index: function (req, res) {
-console.log("req.body", req.body);
+//console.log("req.body", req.body);
         if(req.method !== 'POST'){
             return res.view();
         }
@@ -39,8 +39,8 @@ console.log("req.body", req.body);
    *    `/signup/add`
    */
    add: function (req, res) {
-console.log("req.method", req.method);
-console.log("req.body", req.body);
+//console.log("req.method", req.method);
+//console.log("req.body", req.body);
 //res.send({redirect: '/'});
 
   res.writeHead(302, {
