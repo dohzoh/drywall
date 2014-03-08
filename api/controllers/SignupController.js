@@ -24,27 +24,22 @@
          */
         index: function (req, res) {
             //console.log("req.body", req.body);
-            if(req.method !== 'POST'){
+            if(req.method !== 'POST')
                 return res.view();
-            }
-            else{
-                var list = [];
-                for(var key in User)
-                    list.push(key);
-//            console.log("User", list);
-                // this.param('username')
-                // this.param('email')
-                // this.param('password')
-                console.info("createUser:", req.body);
-//            console.log(User);
+            else
                 return self._createUser(req, res);
-
-            }
         }
 
-
+        /**
+         * create user
+         * @param req   request object
+         * @param res   response object
+         * @private
+         * @see /models/User.js
+         */
         , _createUser : function(req, res){
             User.create({
+                // add user parameter
                     name: req.body.username
                     , email: req.body.email
                     , password: req.body.password

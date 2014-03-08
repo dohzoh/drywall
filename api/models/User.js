@@ -10,22 +10,18 @@
 
     var _ = require("underscore");
     var self = {
-        schema: true,   // schema less mode
-
+        // column list
         attributes: {
-
-            /* e.g.
-             nickname: 'string'
-             */
             // primary key user id
+            // you must NOT use primarykey your have special reason.
             user_id:{
                 primaryKey: true
             }
-
+            // active or inactive flag
             , isActive: {
                 type: "boolean"
             }
-            // user name
+            // user name and login id
             , name: {
                 type: 'alphanumericdashed',
                 required: true
@@ -34,50 +30,72 @@
             , password: {
                 type: 'string'
                 , minLength: 6
-//            , required: true
-//            , columnName: 'encrypted_password'
             }
+            // user email
+            // not unique column
             // registered email
             , email: {
                 type: 'email' // Email type will get validated by the ORM
                 , required: true
             }
-
+            // .....
             , email_authed: {
                 type: "boolean"
             }
         }
 
-        // Lifecycle Callbacks
+        /**
+         * before putItem filter.
+         *  crate hashed user_id, password
+         *  data validation
+         *  check duplicate user name
+         * @param values
+         * @param next
+         */
         , beforeCreate: function(values, next) {
             console.log("load before create");
 
-            // set user id
+            // craete hashed user_id
             self._getUserId(values);
+            // create hashed password
             self._getPassWord(values);
-            //
+            // putItem database
             self.duplicated(values.name, next);
         }
 
-        // custom method
-        // get hashed userid
+        /**
+         * create user_id
+         * @param values    model attributes
+         * @returns {string}
+         * @private
+         */
         , _getUserId: function(values){
             return values.user_id = require("crypto").createHash("sha1").update(values.name).digest("hex").substr(0,8);
         }
         // get encrypted password
+        /**
+         * createa password
+         * @param values    model attributes
+         * @returns {*}
+         * @private
+         */
         , _getPassWord: function(values){
             return values.password = require("bcrypt").hashSync(values.password, 10);
         }
-        // check duplicated user
+        /**
+         * check dupulicated user
+         * @param name  user name
+         * @param next  callback
+         */
         , duplicated: function(name, next){
-            console.log(name);
+//            console.log(name);
             var user_id  = self._getUserId({name:name});
             User.findOne({ user_id: user_id }, function(err, user) {
                 // Do stuff here
                 if(!err){
-                    console.log("registered user",user);
+//                    console.log("registered user",user);
                     if(_.isObject(user)){// require("underscore").isObject(user);
-                        console.warn("Registered User Name:", name);
+//                        console.warn("Registered User Name:", name);
                         // duplicate key existed
                         next({
                             message: 'The conditional request failed',
@@ -90,7 +108,7 @@
                     }
                 }
                 else{
-                    console.log(err);
+//                    console.log(err);
                     next(err);
                 }
             });
