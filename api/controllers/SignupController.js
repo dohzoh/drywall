@@ -15,23 +15,108 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
-module.exports = {
+var SignupController = {
     
   
-  /**
-   * Action blueprints:
-   *    `/signup/index`
-   *    `/signup`
-   */
+    /**
+    * Action blueprints:
+    *    `/signup/index`
+    *    `/signup`
+    */
     index: function (req, res) {
-//console.log("req.body", req.body);
+        var self = this;
+    //console.log("req.body", req.body);
         if(req.method !== 'POST'){
             return res.view();
         }
         else{
-            return res.json({"success": true});
+            var list = [];
+            for(var key in User)
+                list.push(key);
+//            console.log("User", list);
+            // this.param('username')
+            // this.param('email')
+            // this.param('password')
+            console.info("createUser:", req.body);
+//            console.log(User);
+
+            User.create(
+                {
+//                    user_id: req.body.username
+                    name: req.body.username
+                    , email: req.body.email
+                    , password: req.body.password
+                    , encrypted_password: req.body.password
+                    , isActive: true
+                }
+                , function(error, results){
+                    if(error) {
+                        if("ValidationError" in error){
+                            console.log(error.ValidationError.name);
+                            console.log(error.ValidationError.email);
+                            console.log(error.ValidationError.password);
+                        }
+
+                        var holds = {
+                            username: req.body.username
+                            , email:req.body.email
+                            , error: [
+                                'name'
+                            ]
+                            , errfor: {
+                                name: 'required'
+                            }
+                        }
+
+                        console.warn("user create failed", error);
+                        return res.json(holds);
+                    }
+                    else{
+                        console.log("create success", results);
+                        return res.json({"success": true});
+                    }
+                }
+
+            );
+
         }
     },
+
+    _crateUser: function(req, res){
+        var self = SignupController;
+        // this.param('username')
+        // this.param('email')
+        // this.param('password')
+        console.warn("createUser:", req.body);
+        console.log(User);
+/*
+        User.create(
+            {
+                username: this.param('username')
+                , email: this.param('email')
+                , password: this.param('password')
+                , isActive: true
+            }
+            , function(error, results){
+                if(!error){
+                    console.warn("createUser Success");
+                    controller.redirect('/');
+                }
+
+                else if(error.code !== 'ConditionalCheckFailedException'){
+                    controller.req.flash('error', 'ConditionalCheckFailedException');
+                    console.error(error);
+                    controller.res.redirect('signup');
+                }
+                else{
+                    console.error(error.code, error);
+                    controller.res.redirect('signup');
+                }
+            });
+*/
+    }
+
+    ,
 
 
   /**
@@ -52,9 +137,6 @@ module.exports = {
 //    return res.view(req.body);
   },
 
-
-
-
   /**
    * Overrides for the settings in `config/controllers.js`
    * (specific to SignupController)
@@ -63,3 +145,5 @@ module.exports = {
 
   
 };
+
+module.exports = SignupController;

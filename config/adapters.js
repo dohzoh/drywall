@@ -16,7 +16,7 @@ module.exports.adapters = {
 
   // If you leave the adapter config unspecified 
   // in a model definition, 'default' will be used.
-  'default': 'disk'
+  'default': 'dynamodb'
 //   , 'default': 'disk'
 
   // Persistent adapter for DEVELOPMENT ONLY
@@ -26,7 +26,8 @@ module.exports.adapters = {
     }
 
     , dynamodb: {
-        module: 'sails-dynamo'
+        module: 'sails-dynamodb'
+
     }
 
     ,

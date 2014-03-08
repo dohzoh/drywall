@@ -12,8 +12,8 @@
 		"async": "~0.2.9",
 		"emailjs": "~0.3.6",
 		"jade": "~1.1.5",
-		"helmet": "~0.1.2",
-		"bcrypt": "~0.7.7"
+		"helmet": "~0.1.2"
+		, "bcrypt": ""
         , "aws-sdk": ""
         , "connect": ""
         , "connect-dynamodb": ""
