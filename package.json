@@ -18,7 +18,7 @@
         , "vogels": ""
         , "underscore": ""
         , "authom": ""
-        : "whiskers": ""
+        , "whiskers": ""
     },
     "scripts": {
         "start": "node app.js",
