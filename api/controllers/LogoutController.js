@@ -24,9 +24,13 @@ module.exports = {
    *    `/logout`
    */
    index: function (req, res) {
-    
+      console.log("start logout");
+      req.session.authenticated = undefined;
+      req.session.user_id = undefined;
+      req.session.user_info = undefined;
+
     // Send a JSON response
-    res.redirect('/', 301);
+    res.redirect('/', 302);
   },
 
 

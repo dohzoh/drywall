@@ -16,6 +16,7 @@
  */
 (function(){
     "use strict";
+    var _ = require("underscore");
     var self = {
         /**
          * Action blueprints:
@@ -71,6 +72,11 @@
                     }
                     else{
                         console.log("create success", results);
+                        req.session.authenticated = true;
+                        req.session.user_id = results.user_id;
+                        delete results.password;
+                        req.session.user_info = results;
+
                         return res.json({"success": true});
                     }
                 }

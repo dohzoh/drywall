@@ -15,7 +15,7 @@
             // primary key user id
             // you must NOT use primarykey your have special reason.
             user_id:{
-                primaryKey: true
+                primaryKey: true    // primary key(default id)
             }
             // active or inactive flag
             , isActive: {
@@ -25,11 +25,13 @@
             , name: {
                 type: 'alphanumericdashed',
                 required: true
+                , index: true   // global index
             }
             // user password
             , password: {
                 type: 'string'
                 , minLength: 6
+                , index: true   // global index
             }
             // user email
             // not unique column
@@ -37,11 +39,20 @@
             , email: {
                 type: 'email' // Email type will get validated by the ORM
                 , required: true
+                , index: true   // global index
             }
             // .....
             , email_authed: {
                 type: "boolean"
             }
+            // You can also define instance methods here
+            ,fullName: function() {
+                return this.firstName + ' ' + this.lastName
+            }
+        }
+        // You can also define instance methods here
+        , tempMethod: function() {
+            return "Hello"
         }
 
         /**
@@ -56,32 +67,35 @@
             console.log("load before create");
 
             // craete hashed user_id
-            self._getUserId(values);
+            values.user_id = self.getUserId(values.name);
             // create hashed password
-            self._getPassWord(values);
+            values.password = self.getPassWord(values.password);
             // putItem database
             self.duplicated(values.name, next);
         }
 
         /**
          * create user_id
-         * @param values    model attributes
+         * @param name    model attributes
          * @returns {string}
-         * @private
          */
-        , _getUserId: function(values){
-            return values.user_id = require("crypto").createHash("sha1").update(values.name).digest("hex").substr(0,8);
+        , getUserId: function(name){
+            return require("crypto").createHash("sha1").update(name).digest("hex").substr(0,8);
         }
         // get encrypted password
         /**
          * createa password
-         * @param values    model attributes
+         * @param password    model attributes
          * @returns {*}
          * @private
          */
-        , _getPassWord: function(values){
-            return values.password = require("bcrypt").hashSync(values.password, 10);
+        , getPassWord: function(password){
+            return require("bcrypt").hashSync(password, 10);
         }
+        , comparePassWord: function(password, encrypted){
+            return require("bcrypt").compareSync(password, encrypted);
+        }
+
         /**
          * check dupulicated user
          * @param name  user name
@@ -89,7 +103,7 @@
          */
         , duplicated: function(name, next){
 //            console.log(name);
-            var user_id  = self._getUserId({name:name});
+            var user_id  = self.getUserId(name);
             User.findOne({ user_id: user_id }, function(err, user) {
                 // Do stuff here
                 if(!err){
