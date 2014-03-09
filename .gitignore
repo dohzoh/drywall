@@ -53,6 +53,8 @@ node_modules/*
 *.min.js
 *.min.js.map
 *.min.css
+*.jade
+*.ejs
 /config.js
 /credentials.json
 .nodemonignore

@@ -29,7 +29,7 @@
 
             if ( typeof req.session !== 'undefined' && req.session.authenticated) {
                 console.log('authentication success');
-                res.redirect("/admin/", 302);
+                res.redirect("/account/", 302);
                 return;
             }
 
@@ -67,7 +67,8 @@
                                 req.session.user_id = results.user_id;
                                 delete results.password;
                                 req.session.user_info = results;
-                                return res.json({"success": true});
+                                res.redirect("/account/", 302);
+//                                return res.json({"success": true});
                             }
                         }
 //                        else
@@ -75,6 +76,7 @@
                     }
                     else
                         console.warn("error found", error);
+                    return res.view();
                     return res.json({"success": false});
                 });
 
