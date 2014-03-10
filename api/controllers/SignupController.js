@@ -31,6 +31,15 @@
                 return self._createUser(req, res);
         }
         /**
+         *
+         * @param req
+         * @param res
+         */
+        , social: function (req, res) {
+            return res.view();
+        }
+
+        /**
          * Action blueprints:
          *    `/signup/index`
          *    `/signup`

@@ -15,7 +15,7 @@
             // primary key user id
             // you must NOT use primarykey your have special reason.
             user_id:{
-                primaryKey: true    // primary key(default id)
+                primaryKey: true    // primary hash key(default id)
             }
             // active or inactive flag
             , isDeleted: {
@@ -49,6 +49,14 @@
             // activation token
             , activationToken: {
                 type: 'string'
+            }
+            // social
+            , isSocial:{
+                type: "boolean"
+            }
+            // activation token
+            , socialActivated: {
+                type: "boolean"
             }
             /**
              * Strips the password out of the json
