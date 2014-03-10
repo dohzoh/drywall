@@ -18,7 +18,7 @@
                 primaryKey: true    // primary key(default id)
             }
             // active or inactive flag
-            , isActive: {
+            , isDeleted: {
                 type: "boolean"
             }
             // user name and login id
@@ -41,18 +41,30 @@
                 , required: true
                 , index: true   // global index
             }
-            // .....
-            , email_authed: {
-                type: "boolean"
+            // email activate
+            , activated: {
+                type: 'boolean',
+                defaultsTo: false
             }
-            // You can also define instance methods here
-            ,fullName: function() {
-                return this.firstName + ' ' + this.lastName
+            // activation token
+            , activationToken: {
+                type: 'string'
             }
-        }
-        // You can also define instance methods here
-        , tempMethod: function() {
-            return "Hello"
+            /**
+             * Strips the password out of the json
+             * object before its returned from waterline.
+             * @return {object} the model results in object form
+             */
+            , toJSON: function() {
+                // this gives you an object with the current values
+                var obj = this.toObject();
+                delete obj.password;
+
+                delete obj.activationToken;
+                delete obj.activated;
+                // return the new object without password
+                return obj;
+            }
         }
 
         /**
@@ -70,6 +82,9 @@
             values.user_id = self.getUserId(values.name);
             // create hashed password
             values.password = self.getPassWord(values.password);
+            // set activation token
+            values.activated = false;
+            values.activationToken = self.getActivetionToken(values.email);
             // putItem database
             self.duplicated(values.name, next);
         }
@@ -82,9 +97,8 @@
         , getUserId: function(name){
             return require("crypto").createHash("sha1").update(name).digest("hex").substr(0,8);
         }
-        // get encrypted password
         /**
-         * createa password
+         * get encrypted password
          * @param password    model attributes
          * @returns {*}
          * @private
@@ -95,7 +109,17 @@
         , comparePassWord: function(password, encrypted){
             return require("bcrypt").compareSync(password, encrypted);
         }
-
+        /**
+         * get activate token
+          * @param email    email address
+         * @returns {*}
+         */
+        , getActivetionToken: function(email){
+            return require("crypto").createHash("sha1").update((new Date().getTime()+email)).digest("hex");
+        }
+        , getTokenUrl: function(user_id, token){
+            return "http://localhost:1337/signup/activate/"+user_id+"/"+token+"/"
+        }
         /**
          * check dupulicated user
          * @param name  user name

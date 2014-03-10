@@ -93,6 +93,14 @@ module.exports.routes = {
   'get /*(^.*)': 'UserController.profile'
 
   */
+
+    /** Create the route to handle user activations */
+    , 'get /signup/activate/:id/:token': {
+        controller: 'SignupController',
+        action: 'activate'
+    }
+
+
 };
 
 

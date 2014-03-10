@@ -1,24 +1,24 @@
 {
-    "name": "pj-sails",
+    "name": "drywall-dynamodb",
     "private": true,
-    "version": "0.0.0",
+    "version": "0.0.1",
     "description": "a Sails application",
     "dependencies": {
-        "sails": "0.9.11",
+        "sails": "0.9.x",
         "grunt": "0.4.1",
         "sails-disk": "~0.9.0",
         "optimist": "0.3.4",
-		"async": "~0.2.9",
-		"emailjs": "~0.3.6",
+		"async": "~0.2.x",
 		"helmet": "~0.1.2"
-		, "bcrypt": ""
-        , "aws-sdk": ""
-        , "connect": ""
-        , "connect-dynamodb": ""
-        , "vogels": ""
-        , "underscore": ""
-        , "authom": ""
-        , "whiskers": ""
+		, "bcrypt": "0.7.x"
+        , "aws-sdk": "2.x"
+        , "connect": "2.x"
+        , "connect-dynamodb": "1.x"
+        , "vogels": "0.6.x"
+        , "underscore": "1.6.x"
+        , "authom": "0.4.x"
+        , "whiskers": "0.3.x"
+        , "nodemailer": "0.6.x"
     },
     "scripts": {
         "start": "node app.js",

@@ -30,6 +30,79 @@
             else
                 return self._createUser(req, res);
         }
+        /**
+         * Action blueprints:
+         *    `/signup/index`
+         *    `/signup`
+         * @param req
+         * @param res
+         * @returns {*}
+         * @see /config/routes.js
+         */
+        , activate: function(req, res){
+            var params = req.params.all();
+            // see routes.js
+            var user_id = params.id;
+            var token = params.token;
+
+            sails.log.debug('activation action', params);
+
+            //Activate the user that was requested.
+            User.findOne({
+                    user_id: user_id
+                }, function(error, userInfo){
+                    if(error) {
+                        sails.log.warn("User.findOne error:", error);
+                        return res.view("signup/failed");
+                    }
+                    else{
+                        // data not found
+                        if(! require("underscore").isObject(userInfo)){
+                            sails.log.warn("User Not Found, user_id:", user_id);
+                            return res.view("signup/failed");
+                        }
+                        // activated
+                        if(userInfo.activate){
+                            sails.log.warn("was Activated, user_id:", user_id);
+                            res.redirect("/login", 302);
+                            return res.view("signup/failed");
+                        }
+                        // not same authtoken
+                        if(token !== userInfo.activationToken){
+                            sails.log.warn("Activation Failed, token:", token);
+
+                        }
+
+                        // we now have a model with instance methods attached
+                        // update an attribute value
+                        userInfo.activated = true
+
+                        // save the updated value
+                        userInfo.save(function(err) {
+                            // value has been saved
+                            if(!err){
+                                self._setSessionActivated(req, res);
+                                return res.view("signup/success");
+                            }
+                            return res.view("signup/failed");
+                        });
+
+/*
+                        self._updateUser(req, res, userInfo, function(err){
+                            if(!err)
+                                return res.view("signup/success");
+                            return res.view("signup/failed");
+                        })
+*/
+//                        return res.view("signup/success");
+                    }
+            });
+
+
+/*
+*/
+//            return res.json({success:"success"});
+        }
 
         /**
          * create user
@@ -45,9 +118,9 @@
                     , email: req.body.email
                     , password: req.body.password
                     , encrypted_password: req.body.password
-                    , isActive: true
+                    , isDeleted: false
                 }
-                , function(error, results){
+                , function(error, userInfo){
                     if(error) {
                         if("ValidationError" in error){
                             console.log(error.ValidationError.name);
@@ -68,19 +141,75 @@
                         }
 
                         console.warn("user create failed", error);
-                        return res.json(holds);
+                        return res.view();
                     }
                     else{
-                        console.log("create success", results);
-                        req.session.authenticated = true;
-                        req.session.user_id = results.user_id;
-                        delete results.password;
-                        req.session.user_info = results;
-
-                        return res.json({"success": true});
+                        sails.log.debug("create success", userInfo);
+                        self._sendEmail(req, res, userInfo, function(err){
+                            if(!err){
+                                sails.log.debug("set session");
+                                self._setSession(req, res, userInfo);
+                                return res.view("signup/confirm");
+                            }
+                            return res.view("signup/failed");
+                        });
                     }
                 }
             );
+        }
+
+        , _sendEmail: function(req, res, userInfo, cb) {
+            var emailInfo = {
+                name: userInfo.name
+                , email: userInfo.email
+                , url: User.getTokenUrl(userInfo.user_id, userInfo.activationToken)
+            }
+            res.render('activate_txt', emailInfo, function(err, body){
+                if(err) sails.log.debug(err);
+                // Send a JSON response
+                else {
+                    emailInfo.text = body;
+                    nodemailer.send(emailInfo, function(err, response){
+                        if(err){
+                            sails.log.warn('send mail error', err);
+                            cb(err);
+                        }
+                        else{
+                            sails.log.debug('nodemailer sent', response);
+                            cb();
+                        }
+                    });
+                }
+
+            });
+        }
+
+        , _setSession: function(req, res, user){
+            req.session.user_id = user.user_id;
+            delete user.password;
+            req.session.user_info = user;
+        }
+        , _setSessionActivated: function(req, res, user){
+            req.session.authenticated = true;
+        }
+
+        , _updateUser : function(req, res, userInfo, cb){
+            User.update({
+                user_id: userInfo.user_id
+            },{
+                activated: true
+            }, function(err, user) {
+                // Error handling
+                if (err) {
+                    sails.log.warn("Data Update Failed", err);
+                    cb(err);
+                    // Updated users successfully!
+                } else {
+                    sails.log.debug("User activated:", user);
+                    self._setSessionActivated(req, res);
+                    cb();
+                }
+            });
         }
 
         /**

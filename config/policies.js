@@ -20,6 +20,7 @@ module.exports.policies = {
 //    , 'account':{'*': false}
 //    , 'admin':{'*': false}
 
+    , 'mail':{'*': true}
     , 'index':{'*': true}
     , 'about':{'*': true}
     , 'contact':{'*': true}

@@ -2,9 +2,9 @@ Welcome to
 
 Thanks for signing up. As requested, your account has been created. Here are your login credentials:
 
-Username: 
-Email: 
+Username: {name}
+Email: {email}
 
-Login Here: 
+Login Here: {url}
 
 Thanks,
