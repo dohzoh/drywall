@@ -13,6 +13,11 @@ $ cd node_modules/sails-dynamodb && npm install && cd ../../
 ```
 Todo: to npm package
 
+## Boot
+```bash
+$ sails lift  # or ./node_modules/.bin/sails lift
+```
+
 
 License
 ------------
