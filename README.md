@@ -8,6 +8,9 @@ Install is through NPM.
 ```bash
 $ git clone https://github.com/dohzoh/drywall.git -b dynamodb
 $ cd drywall && npm install && cd ../
+$ git clone https://github.com/dohzoh/sails-dynamodb.git node_modules/sails-dynamodb -b 0.9
+$ cp node_modules/sails-dynamodb/credentials.json ./  # & put your amazon keys
+$ cd node_modules/sails-dynamodb && npm install && cd ../../
 ```
 Todo: to npm package
 
