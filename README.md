@@ -1,6 +1,16 @@
 Drywall DynamoDB
 =============
 
+## Install
+
+Install is through NPM.
+
+```bash
+$ git clone https://github.com/dohzoh/drywall.git -b dynamodb
+$ cd drywall && npm install && cd ../
+```
+Todo: to npm package
+
 
 License
 ------------
