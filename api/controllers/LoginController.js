@@ -59,6 +59,10 @@
 //                            var hash = User.comparePassWord(password, results.password);
 //                            console.log("results.password === ", hash)
 //                            console.log("results.password",results.password);
+                            if(! results.activated){
+                                sails.log.warn("not activate user", results.user_id);
+                                return res.view();
+                            }
 
                             if( User.comparePassWord(password, results.password)){
 //                                console.log("is authed");
@@ -77,7 +81,7 @@
                     else
                         console.warn("error found", error);
                     return res.view();
-                    return res.json({"success": false});
+//                    return res.json({"success": false});
                 });
 
 
