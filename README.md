@@ -3,7 +3,6 @@ Drywall DynamoDB
 
 ## Install
 
-Install is through NPM.
 
 ```bash
 $ git clone https://github.com/dohzoh/drywall.git -b dynamodb
