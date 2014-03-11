@@ -106,9 +106,38 @@
                 // Send a Default View
                 return res.view();
             }
-            else{
-                // Send a JSON Response
-                return res.json({"success": true});
+            else {
+                sails.log.debug("req.body", req.body);
+
+                require("async").waterfall(
+                    [
+                        function (callback) {
+                            User.findOne({ email: req.body.email }, function (userInfo) {
+                                try{
+                                    if (!require("underscore").isObject(userInfo)) throw "email not found";
+                                } catch (e) {
+                                    var error = e;
+                                }
+                                callback(error, userInfo);
+                            });
+                        }
+                        , function (userInfo, callback) {
+                            sails.log.debug("req.body", req.body);
+                            // Send a JSON Response
+                            return res.json({ "success": true });
+                            callback(null);
+                        }
+                    ]
+                    , function (err, result) {
+                        // result now equals 'done'    
+                        //                        if (err) { throw err; }
+                        sails.log.debug(err);
+                        return res.json({ "success": false });
+                    }
+                );
+
+
+
             }
         },
 
