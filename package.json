@@ -15,7 +15,7 @@
         , "connect": "2.x"
         , "connect-dynamodb": "1.x"
         , "vogels": "0.6.x"
-        , "underscore": "1.6.x"
+        , "lodash": ""
         , "authom": "0.4.x"
         , "whiskers": "0.3.x"
         , "nodemailer": "0.6.x"

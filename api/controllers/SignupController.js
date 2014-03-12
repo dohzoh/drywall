@@ -16,7 +16,7 @@
  */
 (function(){
     "use strict";
-    var _ = require("underscore");
+
     var self = {
         /**
          * Action blueprints:

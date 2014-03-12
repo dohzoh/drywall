@@ -17,8 +17,6 @@
 (function(){
     'use strict';
 
-    var _ = require("underscore");
-
     var self = {
         /**
          * Action blueprints:
@@ -54,7 +52,7 @@
                 }, function(error, results){
                     if(!error) {
 //                        console.log("found user", results);
-                        if(_.isObject(results)){
+                        if (require("lodash").isObject(results)) {
 //                            console.log("isObject")
 //                            var hash = User.comparePassWord(password, results.password);
 //                            console.log("results.password === ", hash)
@@ -110,7 +108,7 @@
                 sails.log.debug("req.body", req.body);
 
                 require("async").waterfall(
-                    self._forgotWaterfall
+                    self._forgotWaterfall(req, res)
                     , function (err, result) {
                         // result now equals 'done'    
                         //                        if (err) { throw err; }
@@ -124,30 +122,117 @@
             }
         }
 
-        , _forgotWaterfall:[
-            function (callback) {
-                User.findOne({ email: req.body.email }, function (userInfo) {
-                    try{
-                        if (!require("underscore").isObject(userInfo)) throw "email not found";
+        , _forgotWaterfall: function (req, res) {
+            return [
+                // check require
+                function (callback) {
+                    var error = null;
+                    try {
+                        if (require("lodash").isEmpty(req.body.username)) throw new Error("required name");
+                        if (require("lodash").isEmpty(req.body.email)) throw new Error("required email");
                     } catch (e) {
                         var error = e;
                     }
-                    callback(error, userInfo);
-                });
+                    callback(error);
+                }
+                // check database
+                , function (callback) {
+                    User.findOne({ name: req.body.username }, function (error, userInfo) {
+                        try {
+                            if (require("lodash").isEmpty(userInfo)) throw new Error( "email not found");
+                            if (! userInfo.activated) throw new Error("Not Activate User");
+                            if (userInfo.isDeleted)  throw new Error ("inValid email");
+                        } catch (e) {
+                            var error = e;
+                        }
+                        callback(error, userInfo);
+                    });
+                }
+                // add activate key
+                , function (userInfo, callback) {
+                    var data = {
+                        user_id: userInfo.user_id
+                        , email: userInfo.email
+                        , type: "login/forgot"
+                    }
+
+                    Activate.create(data, function (error, activateInfo) {
+                        try {
+                            if (require("lodash").isEmpty(userInfo)) throw "email not found";
+                        } catch (e) {
+                            var error = e;
+                        }
+                        callback(error, userInfo, activateInfo);
+                    });
+                }
+
+                // send emai
+                , function (userInfo, activateInfo, callback) {
+                    var emailInfo = {
+                        name: userInfo.name
+                        , email: userInfo.email
+                    }
+                    res.render('activate_txt', emailInfo, function (err, body) {
+                        if (err) sails.log.debug(err);
+                            // Send a JSON response
+                        else {
+                            emailInfo.text = body;
+                            nodemailer.send(emailInfo, function (err, response) {
+                                if (err) {
+                                    sails.log.warn('send mail error', err);
+                                    cb(err);
+                                }
+                                else {
+                                    sails.log.debug('nodemailer sent', response);
+                                    cb();
+                                }
+                            });
+                        }
+
+                    });
+                    
+                }
+                // replay user
+                , function (userInfo, callback) {
+                    sails.log.debug("req.body", req.body);
+                    // Send a JSON Response
+                    return res.view("login/forgot");
+                    callback(null);
+                }
+            ]
+        }
+
+        , _sendEmail: function (req, res, userInfo, cb) {
+            var emailInfo = {
+                name: userInfo.name
+                , email: userInfo.email
+                , url: User.getTokenUrl(userInfo.user_id, userInfo.activationToken)
             }
-            , function (userInfo, callback) {
-                sails.log.debug("req.body", req.body);
-                // Send a JSON Response
-                return res.json({ "success": true });
-                callback(null);
-            }
-        ]
+            res.render('activate_txt', emailInfo, function (err, body) {
+                if (err) sails.log.debug(err);
+                    // Send a JSON response
+                else {
+                    emailInfo.text = body;
+                    nodemailer.send(emailInfo, function (err, response) {
+                        if (err) {
+                            sails.log.warn('send mail error', err);
+                            cb(err);
+                        }
+                        else {
+                            sails.log.debug('nodemailer sent', response);
+                            cb();
+                        }
+                    });
+                }
+
+            });
+        }
 
         /**
          * Action blueprints:
          *    `/login/reset`
          */
-        reset: function (req, res) {
+        , reset: function (req, res) {
 
             // Send a JSON response
             return res.view({

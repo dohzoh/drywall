@@ -7,8 +7,7 @@
  */
 (function(){
     'use strict'
-
-    var _ = require("underscore");
+    
     var self = {
         // column list
         attributes: {
@@ -140,7 +139,7 @@
                 // Do stuff here
                 if(!err){
 //                    console.log("registered user",user);
-                    if(_.isObject(user)){// require("underscore").isObject(user);
+                    if (require("lodash").isObject(user)) {// require("underscore").isObject(user);
 //                        console.warn("Registered User Name:", name);
                         // duplicate key existed
                         next({
