@@ -158,6 +158,42 @@ module.exports = function (grunt) {
           dest: 'www'
         }
         ]
+      },
+      vendor: {
+        files: [
+          {
+            expand: true, cwd: 'bower_components/bootstrap/',
+            src: ['js/**', 'less/**'], dest: 'public/vendor/bootstrap/'
+          },
+          {
+            expand: true, cwd: 'bower_components/backbone/',
+            src: ['backbone.js'], dest: 'public/vendor/backbone/'
+          },
+          {
+            expand: true, cwd: 'bower_components/font-awesome/',
+            src: ['fonts/**', 'less/**'], dest: 'public/vendor/font-awesome/'
+          },
+          {
+            expand: true, cwd: 'bower_components/html5shiv/dist/',
+            src: ['html5shiv.js'], dest: 'public/vendor/html5shiv/'
+          },
+          {
+            expand: true, cwd: 'bower_components/jquery/dist/',
+            src: ['jquery.js'], dest: 'public/vendor/jquery/'
+          },
+          {
+            expand: true, cwd: 'bower_components/momentjs/',
+            src: ['moment.js'], dest: 'public/vendor/momentjs/'
+          },
+          {
+            expand: true, cwd: 'bower_components/respond/src/',
+            src: ['respond.js'], dest: 'public/vendor/respond/'
+          },
+          {
+            expand: true, cwd: 'bower_components/underscore/',
+            src: ['underscore.js'], dest: 'public/vendor/underscore/'
+          }
+        ]
       }
     },
 
@@ -408,6 +444,25 @@ module.exports = function (grunt) {
 
         // When assets are changed:
         tasks: ['compileAssets', 'linkAssets']
+      },
+      clientJS: {
+         files: [
+          'public/layouts/**/*.js', '!public/layouts/**/*.min.js',
+          'public/views/**/*.js', '!public/views/**/*.min.js'
+         ],
+         tasks: ['newer:uglify', 'newer:jshint:client']
+      },
+      serverJS: {
+         files: ['views/**/*.js'],
+         tasks: ['newer:jshint:server']
+      },
+      clientLess: {
+         files: [
+          'public/layouts/**/*.less',
+          'public/views/**/*.less',
+          'public/less/**/*.less'
+         ],
+         tasks: ['newer:less']
       }
     }
   });
