@@ -95,6 +95,12 @@
             // putItem database
             self.duplicated(values.name, next);
         }
+/*
+        , beforeUpdate: function (values, callback) {
+            values.isDeleted = parseInt(values.isDeleted);
+            callback();
+        }
+*/
 
         /**
          * create user_id

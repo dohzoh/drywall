@@ -46,10 +46,14 @@
       <div class="modal-body">
           <form class="form col-md-12 center-block" method="post">
             <div class="form-group">
-              <input type="text" class="form-control input-lg" placeholder="username" name="username" />
+              <input type="text" class="form-control input-lg" placeholder="" name="user_id" value="{user_id}" />
             </div>
             <div class="form-group">
-              <input type="text" class="form-control input-lg" placeholder="new password" name="password" />
+              <input type="password" class="form-control input-lg" placeholder="new password" name="password" />
+            </div>
+            <div class="form-group">
+				{_csrf}
+				<input type="text" class="form-control input-lg" placeholder="" name="id" value="{id}" />
             </div>
             <div class="form-group">
               <button class="btn btn-primary btn-lg btn-block">Send Reset</button>

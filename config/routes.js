@@ -95,11 +95,16 @@ module.exports.routes = {
   */
 
     /** Create the route to handle user activations */
+    // email auth
     , 'get /signup/activate/:id/:token': {
         controller: 'SignupController',
         action: 'activate'
     }
-
+    // password reset
+    , 'get /login/reset/:id': {
+        controller: 'LoginController',
+        action: 'reset'
+    }
 
 };
 

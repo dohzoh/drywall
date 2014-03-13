@@ -137,7 +137,7 @@
                         var error = e;
                         callback(error);
                     }
-                    if (!error) callback(error);
+                    if (!error) callback(null);
                 }
                 // check database
                 , function (callback) {
@@ -151,7 +151,7 @@
                             var error = e;
                             callback(error);
                         }
-                        if (!error) callback(error, userInfo);
+                        if (!error) callback(null, userInfo);
                     });
                     
                 }
@@ -170,7 +170,7 @@
                             var error = e;
                             callback(error);
                         }
-                        if (!error) callback(error, userInfo, activateInfo);
+                        if (!error) callback(null, userInfo, activateInfo);
                     });
                 }
 
@@ -192,19 +192,12 @@
                                     var error = e;
                                     callback(error);
                                 }
-                                if (!error) callback(error);
+                                if (!error) callback(null);
                             });
                         }
 
                     });
                     
-                }
-                // replay user
-                , function (callback) {
-                    sails.log.debug("req.body", req.body);
-                    // Send a JSON Response
-                    return res.view("login/forgot");
-                    callback(null);
                 }
             ]
         }
@@ -238,23 +231,84 @@
         /**
          * Action blueprints:
          *    `/login/reset`
+         * @see /config/routes.js
          */
         , reset: function (req, res) {
+            sails.log.debug(params);
 
-            // Send a JSON response
+            // get activation id
+            var id = null;
             if (req.method !== 'POST') {
-                // Send a Default View
-                return res.view();
+                var params = req.params.all();
+                // see routes.js
+                id = params.id;
             }
             else {
-                require("async").waterfall([
-                    function (callback) {
-                        callback();
-                    }
-                ], function (error, results) {
-                    return res.view();
-                });
+                id = req.body.id;
             }
+
+            if (require("lodash").isEmpty(id)) res.redirect("/", 302);
+            
+            require("async").waterfall(
+                self._resetWaterfall(id, req, res)
+                , function (error, results) {
+                    if (error) sails.log.debug("Raise Error:", error);
+                    else
+                        return res.view({ id: id, user_id:results.user_id });
+                }
+            );
+
+        }
+
+        , _resetWaterfall: function (id, req, res) {
+            return [
+                // check id
+                function (callback) {
+                    Activate.findOne({ id: id }, function (error, activateInfo) {
+                        sails.log.debug(activateInfo);
+                        try{
+                            if (error) throw error;
+                        }catch(e){
+                            error = e;
+                            callback(error);
+                        }
+
+                        if (!error) callback(null, activateInfo);
+                    });
+
+                }
+                // get user 
+                , function (activateInfo, callback) {
+
+                    // Send a JSON response
+                    if (req.method !== 'POST') {
+                        // Send a Default View
+                        callback(null, activateInfo);
+                    }
+                    else {
+                        sails.log.debug("start update");
+                        User
+                        .update({
+                            user_id: activateInfo.user_id
+                        }
+                        , {
+                            password: User.getPassWord(req.body.password)
+                        }
+                        , function (error, userInfo) {
+//                            sails.log.debug(userInfo);
+                            try {
+                                if (error) throw error;
+                            } catch (e) {
+                                error = e;
+                                sails.log.debug("Error update:",error);
+                                callback(error);
+                            }
+
+                            if (!error) callback(null, userInfo);
+                        });
+                    }
+                }
+            ];
         }
 
         /*
