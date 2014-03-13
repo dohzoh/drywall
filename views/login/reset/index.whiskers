@@ -1,4 +1,92 @@
-<!DOCTYPE html><html><head><title>Reset Your Password</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/layouts/core.min.css?undefined"></head><body><div class="navbar navbar-default navbar-fixed-top"><div class="container"><div class="navbar-header"><a href="/" class="navbar-brand"><img src="/media/logo-symbol-64x64.png" class="navbar-logo"><span class="navbar-brand-label"></span></a><button data-toggle="collapse" data-target=".my-navbar-collapse" class="navbar-toggle collapsed"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button></div><div class="navbar-collapse my-navbar-collapse collapse"><ul class="nav navbar-nav"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/signup/">Sign Up</a></li><li><a href="/contact/">Contact</a></li></ul><ul class="nav navbar-nav navbar-right"><li><a href="/login/"><i class="fa fa-user"></i> Sign In</a></li></ul></div></div></div><div class="page"><div class="container"><div class="row"><div class="col-sm-6"><div class="page-header"><h1>Reset Your Password</h1></div><div id="reset"></div></div></div><script type="text/template" id="tmpl-reset"><form><div class="alerts"><% _.each(errors, function(err) { %><div class="alert alert-danger alert-dismissable"><button type="button" data-dismiss="alert" class="close">&times;</button><%- err %></div><% }); %>
-<% if (success) { %><div class="alert alert-info alert-dismissable"><button type="button" data-dismiss="alert" class="close">&times;</button>Your password has been reset. Please login to confirm.</div><% } %>
-<% if (id == undefined) { %><div class="alert alert-warning alert-dismissable"><button type="button" data-dismiss="alert" class="close">&times;</button>You do not have a valid reset request.</div><% } %></div><% if (!success && id != undefined) { %><div class="form-group <%- errfor.password ? "has-error" : "" %>"><label class="control-label">New Password:</label><input type="password" name="password" value="<%= password %>" class="form-control"><span class="help-block"><%- errfor.password %></span></div><div class="form-group <%- errfor.confirm ? "has-error" : "" %>"><label class="control-label">Confirm Password:</label><input type="password" name="confirm" value="<%= confirm %>" class="form-control"><span class="help-block"><%- errfor.confirm %></span></div><% } %><div class="form-group"><% if (!success && id != undefined) { %><button type="button" class="btn btn-primary btn-reset">Set Password</button><% } %>
-&nbsp;<a href="/login/" class="btn btn-link">Back to Login</a></div></form></script></div></div><div class="footer"><div class="container"><span class="copyright pull-right">&#169;  </span><ul class="links"><li><a href="/">Home</a></li><li><a href="/contact/">Contact</a></li></ul><div class="clearfix"></div></div></div><div class="ajax-spinner"><img src="/media/ajax-pulse.gif"></div><!--if lte IE 9script(src='/layouts/ie-sucks.min.js?')--><script src="/layouts/core.min.js?undefined"></script><script src="/views/login/reset/index.min.js?undefined"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8"> 
+    <title>
+      Reset Your Password
+    </title>
+        <meta name="generator" content="Bootply" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+        
+        <!--[if lt IE 9]>
+          <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+
+
+
+
+
+
+
+
+
+        <!-- CSS code from Bootply.com editor -->
+        
+        <style type="text/css">
+            .modal-footer {   border-top: 0px; }
+        </style>
+    </head>
+    
+    <!-- HTML code from Bootply.com editor -->
+    
+    <body  >
+        
+        <!--login modal-->
+<div id="loginModal" class="modal show" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+  <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Å~</button>
+          <h1 class="text-center">
+                Reset Your Password
+		  </h1>
+      </div>
+      <div class="modal-body">
+          <form class="form col-md-12 center-block" method="post">
+            <div class="form-group">
+              <input type="text" class="form-control input-lg" placeholder="username" name="username" />
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control input-lg" placeholder="new password" name="password" />
+            </div>
+            <div class="form-group">
+              <button class="btn btn-primary btn-lg btn-block">Send Reset</button>
+              <span class="pull-right"><a href="#">Register</a></span><span><a href="#">Need help?</a></span>
+            </div>
+          </form>
+      </div>
+      <div class="modal-footer">
+          <div class="col-md-12">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		  </div>	
+      </div>
+  </div>
+  </div>
+</div>
+        
+        <script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+
+        <script type='text/javascript' src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+
+
+
+
+
+        
+        <!-- JavaScript jQuery code from Bootply.com editor -->
+        
+        <script type='text/javascript'>
+        
+        $(document).ready(function() {
+        
+            
+        
+        });
+        
+        </script>
+        
+    </body>
+</html>

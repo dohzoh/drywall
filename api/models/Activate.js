@@ -10,11 +10,7 @@
 
     var self = {
         attributes: {
-            token:{
-                primaryKey: true    // primary key(default id)
-            }
-
-            , type:{
+            type:{
                 type: 'string'
             }
 
@@ -39,24 +35,17 @@
          * @param values
          * @param next
          */
-        , beforeCreate: function (values, next) {
-            console.log("load before create");
-
-            // set activation token
-            values.token = self.getActivetionToken(values.email);
-        }
+//        , beforeCreate: function (values, next) {
+//            next();
+//        }
 
         /**
          * get activate token
           * @param email    email address
          * @returns {*}
          */
-        , getActivetionToken: function (email) {
-            sails.log.debug("getActivetionToken: ", email);
-            return require("crypto").createHash("sha1").update((new Date().getTime() + email)).digest("hex");
-        }
-        , getTokenUrl: function (user_id, token) {
-            return "http://localhost:1337/login/reset/" + user_id + "/" + token + "/"
+        , getTokenUrl: function (id) {
+            return "http://localhost:1337/login/reset/"+ id + "/"
         }
     };
     module.exports = self;

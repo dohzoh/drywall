@@ -17,6 +17,9 @@
 (function(){
     'use strict';
 
+    var _ = require('lodash');
+    var async = require('async');
+
     var self = {
         /**
          * Action blueprints:
@@ -105,15 +108,18 @@
                 return res.view();
             }
             else {
-                sails.log.debug("req.body", req.body);
+//                sails.log.debug("req.body", req.body);
 
                 require("async").waterfall(
                     self._forgotWaterfall(req, res)
                     , function (err, result) {
+                        sails.log.debug("finish waterfall");
                         // result now equals 'done'    
-                        //                        if (err) { throw err; }
-                        sails.log.debug(err);
-                        return res.json({ "success": false });
+                        if (err) { throw err }
+//                        sails.log.debug(err);
+                        //                        return res.json({ "success": false });
+                        else
+                            return res.view("login/forgot/confirm");
                     }
                 );
             }
@@ -129,21 +135,25 @@
                         if (require("lodash").isEmpty(req.body.email)) throw new Error("required email");
                     } catch (e) {
                         var error = e;
+                        callback(error);
                     }
-                    callback(error);
+                    if (!error) callback(error);
                 }
                 // check database
                 , function (callback) {
                     User.findOne({ name: req.body.username }, function (error, userInfo) {
                         try {
+                            if (error) throw error;
                             if (require("lodash").isEmpty(userInfo)) throw new Error( "email not found");
-                            if (! userInfo.activated) throw new Error("Not Activate User");
-                            if (userInfo.isDeleted)  throw new Error ("inValid email");
+                            if (! parseInt(userInfo.activated)) throw new Error("Not Activate User");
+                            if (parseInt(userInfo.isDeleted))  throw new Error ("inValid email");
                         } catch (e) {
                             var error = e;
+                            callback(error);
                         }
-                        callback(error, userInfo);
+                        if (!error) callback(error, userInfo);
                     });
+                    
                 }
                 // add activate key
                 , function (userInfo, callback) {
@@ -155,34 +165,34 @@
 
                     Activate.create(data, function (error, activateInfo) {
                         try {
-                            if (require("lodash").isEmpty(userInfo)) throw "email not found";
+                            if (require("lodash").isEmpty(activateInfo)) throw new Error("create key error");
                         } catch (e) {
                             var error = e;
+                            callback(error);
                         }
-                        callback(error, userInfo, activateInfo);
+                        if (!error) callback(error, userInfo, activateInfo);
                     });
                 }
 
                 // send emai
                 , function (userInfo, activateInfo, callback) {
                     var emailInfo = {
-                        name: userInfo.name
-                        , email: userInfo.email
+                        url: Activate.getTokenUrl(activateInfo.id)
                     }
-                    res.render('activate_txt', emailInfo, function (err, body) {
+                    res.render('login_forget_txt', emailInfo, function (err, body) {
                         if (err) sails.log.debug(err);
                             // Send a JSON response
                         else {
+                            emailInfo.to = userInfo.email;
                             emailInfo.text = body;
-                            nodemailer.send(emailInfo, function (err, response) {
-                                if (err) {
-                                    sails.log.warn('send mail error', err);
-                                    cb(err);
+                            nodemailer.send(emailInfo, function (error, response) {
+                                try {
+                                    if (error) throw error;
+                                } catch (e) {
+                                    var error = e;
+                                    callback(error);
                                 }
-                                else {
-                                    sails.log.debug('nodemailer sent', response);
-                                    cb();
-                                }
+                                if (!error) callback(error);
                             });
                         }
 
@@ -190,7 +200,7 @@
                     
                 }
                 // replay user
-                , function (userInfo, callback) {
+                , function (callback) {
                     sails.log.debug("req.body", req.body);
                     // Send a JSON Response
                     return res.view("login/forgot");
@@ -199,7 +209,7 @@
             ]
         }
 
-        , _sendEmail: function (req, res, userInfo, cb) {
+        , _sendEmail: function (req, res, userInfo, callback) {
             var emailInfo = {
                 name: userInfo.name
                 , email: userInfo.email
@@ -213,11 +223,11 @@
                     nodemailer.send(emailInfo, function (err, response) {
                         if (err) {
                             sails.log.warn('send mail error', err);
-                            cb(err);
+                            callback(err);
                         }
                         else {
                             sails.log.debug('nodemailer sent', response);
-                            cb();
+                            callback();
                         }
                     });
                 }
@@ -232,9 +242,19 @@
         , reset: function (req, res) {
 
             // Send a JSON response
-            return res.view({
-                hello: 'world'
-            });
+            if (req.method !== 'POST') {
+                // Send a Default View
+                return res.view();
+            }
+            else {
+                require("async").waterfall([
+                    function (callback) {
+                        callback();
+                    }
+                ], function (error, results) {
+                    return res.view();
+                });
+            }
         }
 
         /*
