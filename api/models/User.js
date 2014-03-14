@@ -16,21 +16,18 @@
             user_id:{
                 primaryKey: true    // primary hash key(default id)
             }
-            // active or inactive flag
-            , isDeleted: {
-                type: "boolean"
-            }
             // user name and login id
             , name: {
-                type: 'alphanumericdashed',
-                required: true
+                type: 'alphanumericdashed'
+                , required: true
                 , index: true   // global index
             }
             // user password
             , password: {
                 type: 'string'
                 , minLength: 6
-                , index: true   // global index
+                , required: true
+//                , index: true   // global index
             }
             // user email
             // not unique column
@@ -46,17 +43,13 @@
                 defaultsTo: false
             }
             // activation token
-            , activationToken: {
-                type: 'string'
-            }
+            , activationToken: 'string'
             // social
             , isSocial:{
                 type: "boolean"
             }
             // activation token
-            , socialActivated: {
-                type: "boolean"
-            }
+            , socialActivated: "boolean"
             /**
              * Strips the password out of the json
              * object before its returned from waterline.
@@ -95,12 +88,6 @@
             // putItem database
             self.duplicated(values.name, next);
         }
-/*
-        , beforeUpdate: function (values, callback) {
-            values.isDeleted = parseInt(values.isDeleted);
-            callback();
-        }
-*/
 
         /**
          * create user_id

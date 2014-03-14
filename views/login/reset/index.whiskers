@@ -56,6 +56,9 @@
 				<input type="text" class="form-control input-lg" placeholder="" name="id" value="{id}" />
             </div>
             <div class="form-group">
+              <input type="text" class="form-control input-lg" name='_csrf' value='{_csrf}' />
+            </div>
+            <div class="form-group">
               <button class="btn btn-primary btn-lg btn-block">Send Reset</button>
               <span class="pull-right"><a href="#">Register</a></span><span><a href="#">Need help?</a></span>
             </div>

@@ -127,7 +127,7 @@
                     , email: req.body.email
                     , password: req.body.password
                     , encrypted_password: req.body.password
-                    , isDeleted: false
+//                    , isDeleted: false
                 }
                 , function(error, userInfo){
                     if(error) {

@@ -19,6 +19,7 @@ module.exports.policies = {
     '*': "isAuthenticated"
 //    , 'account':{'*': false}
 //    , 'admin':{'*': false}
+//    , 'withdraw':{'*': false}
 
     , 'mail':{'*': true}
     , 'index':{'*': true}

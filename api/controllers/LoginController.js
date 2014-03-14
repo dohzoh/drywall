@@ -146,7 +146,7 @@
                             if (error) throw error;
                             if (require("lodash").isEmpty(userInfo)) throw new Error( "email not found");
                             if (! parseInt(userInfo.activated)) throw new Error("Not Activate User");
-                            if (parseInt(userInfo.isDeleted))  throw new Error ("inValid email");
+//                            if (parseInt(userInfo.isDeleted))  throw new Error ("inValid email");
                         } catch (e) {
                             var error = e;
                             callback(error);
