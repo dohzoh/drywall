@@ -12,10 +12,9 @@
         <![endif]-->
 
 
-
-
-
-
+		<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		<link href="./styles/rickshaw.css" rel="stylesheet">
+		<script src="./js/rickshaw.js" type="application/javascript"></script>
 
 
 
@@ -102,6 +101,9 @@ padding: 0px;
 overflow: hidden;
 }
 </style>
+
+
+
     </head>
     
     <!-- HTML code from Bootply.com editor -->
@@ -202,6 +204,29 @@ overflow: hidden;
        <hr>
 
 
+<div id="chart"></div>
+
+
+<script>
+
+var graph = new Rickshaw.Graph( {
+    element: document.querySelector("#chart"), 
+    width: 500, 
+    height: 200, 
+    series: [{
+        color: 'steelblue',
+        data: [ 
+            { x: 0, y: 40 }, 
+            { x: 1, y: 49 }, 
+            { x: 2, y: 38 }, 
+            { x: 3, y: 30 }, 
+            { x: 4, y: 32 } ]
+    }]
+});
+
+graph.render();
+
+</script>
 
 
 
