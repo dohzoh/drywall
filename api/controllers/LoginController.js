@@ -42,65 +42,86 @@
 //                console.log(User);
 
 //                console.log("User.tempMethod():", User.tempMethod());
-                var user_id = User.getUserId(req.body.username);
-                var password = req.body.password;
 
-//                console.log("body:", req.body);
+                sails.log("body:", req.body);
 //                console.log("::user_id:", user_id);
 //                console.log("::password:", password);
 
-
-                User.findOne({
-                    user_id: user_id
-                }, function(error, results){
-                    if(!error) {
-//                        console.log("found user", results);
-                        if (require("lodash").isObject(results)) {
-//                            console.log("isObject")
-//                            var hash = User.comparePassWord(password, results.password);
-//                            console.log("results.password === ", hash)
-//                            console.log("results.password",results.password);
-                            if(! results.activated){
-                                sails.log.warn("not activate user", results.user_id);
-                                return res.view();
-                            }
-
-                            if( User.comparePassWord(password, results.password)){
-//                                console.log("is authed");
-                                // set session
-                                req.session.authenticated = true;
-                                req.session.user_id = results.user_id;
-                                delete results.password;
-                                req.session.user_info = results;
-                                res.redirect("/account/", 302);
-//                                return res.json({"success": true});
-                            }
+                require("async").waterfall(
+                    self._loginWaterfall(req, res)
+                    , function (err, results) {
+                        sails.log.debug("finish waterfall");
+                        // result now equals 'done'    
+                        if (err) {
+                            sails.log("login failed", err.message);
+                            return res.view({ username: req.body.username, errors: err.message });
                         }
-//                        else
-//                            console.log("nonObject");
+                            //                        sails.log.debug(err);
+                            //                        return res.json({ "success": false });
+                        else {
+
+                            sails.log("login success");
+                            req.session.authenticated = true;
+                            req.session.user_id = results.user_id;
+                            delete results.password;
+                            req.session.user_info = results;
+                            res.redirect("/account/", 302);
+//                            return res.view({ username: req.body.username });
+                        }
                     }
-                    else
-                        console.warn("error found", error);
-                    return res.view();
-//                    return res.json({"success": false});
-                });
+                );
 
-
-
-
-//                req.session.authenticated = true;
-                // Send a JSON Response
-//                return res.json({"success": true});
             }
 
-        },
+        }
 
+        , _loginWaterfall: function (req, res) {
+            return [
+                // null check
+                function (callback) {
+                    var error = null;
+                    try {
+                        if (require("lodash").isEmpty(req.body.username)) throw new Error("require username");
+                        if (require("lodash").isEmpty(req.body.password)) throw new Error("require password");
+                    } catch (e) {
+                        var error = e;
+                        callback(error);
+                    }
+                    if (!error) callback(null);
+                }
+
+                // validation parameters
+                , function (callback) {
+                    var user_id = User.getUserId(req.body.username);
+                    var password = req.body.password;
+
+                    User.findOne({ user_id: user_id }, function (error, userInfo) {
+                        try {
+                            if (error) throw error;
+                            if (require("lodash").isEmpty(userInfo)) throw new Error("user not found");
+                            if (! userInfo.activated) throw new Error("Not Activate User");
+                            if (! User.comparePassWord(password, userInfo.password)) throw new Error("invalid password");
+                                //                            if (parseInt(userInfo.isDeleted))  throw new Error ("inValid email");
+                        } catch (e) {
+                            var error = e;
+                            callback(error);
+                        }
+                        if (!error) callback(null, userInfo);
+                    });
+                }
+
+                , function (userInfo, callback) {
+                    callback(null, userInfo);
+                }
+
+            ];
+        }
 
         /**
          * Action blueprints:
          *    `/login/forgot`
          */
-        forgot: function (req, res) {
+        , forgot: function (req, res) {
 
             // Send a JSON response
             if(req.method !== 'POST'){
@@ -145,7 +166,7 @@
                         try {
                             if (error) throw error;
                             if (require("lodash").isEmpty(userInfo)) throw new Error( "email not found");
-                            if (! parseInt(userInfo.activated)) throw new Error("Not Activate User");
+                            if (userInfo.activated) throw new Error("Not Activate User");
 //                            if (parseInt(userInfo.isDeleted))  throw new Error ("inValid email");
                         } catch (e) {
                             var error = e;
