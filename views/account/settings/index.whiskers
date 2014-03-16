@@ -1,3 +1,384 @@
-<!DOCTYPE html><html><head><title>Account Settings</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/layouts/core.min.css?undefined"></head><body><div class="navbar navbar-default navbar-fixed-top"><div class="container"><div class="navbar-header"><a href="/account/" class="navbar-brand"><img src="/media/logo-symbol-64x64.png" class="navbar-logo"><span class="navbar-brand-label"></span></a><button data-toggle="collapse" data-target=".my-navbar-collapse" class="navbar-toggle collapsed"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button></div><div class="navbar-collapse my-navbar-collapse collapse"><ul class="nav navbar-nav"><li><a href="/account/">My Account</a></li><li><a href="/account/settings/">Settings</a></li></ul><ul class="nav navbar-nav pull-right"><li><a href="/logout/"><i class="fa fa-user"></i> Sign Out</a></li></ul></div></div></div><div class="page"><div class="container"><div class="row"><div class="col-xs-12"><div class="page-header"><h1>Account Settings</h1></div></div></div><div class="row"><div class="col-sm-9"><div id="details"></div><div id="identity"></div><div id="password"></div></div><div class="col-sm-3"></div></div><script type="text/template" id="tmpl-details"><fieldset><legend>Contact Info</legend><div class="alerts"><% _.each(errors, function(err) { %><div class="alert alert-danger alert-dismissable"><%- err %></div><% }); %>
-<% if (success) { %><div class="alert alert-info alert-dismissable"><button type="button" data-dismiss="alert" class="close">&times;</button>Changes have been saved.</div><% } %></div><div class="control-group <%- errfor.first ? "has-error" : "" %>"><label class="control-label">First Name:</label><input type="text" name="first" value="<%- first %>" class="form-control"><span class="help-block"><%- errfor.first %></span></div><div class="control-group <%- errfor.middle ? "has-error" : "" %>"><label class="control-label">Middle Name:</label><input type="text" name="middle" value="<%- middle %>" class="form-control"><span class="help-block"><%- errfor.middle %></span></div><div class="control-group <%- errfor.last ? "has-error" : "" %>"><label class="control-label">Last Name:</label><input type="text" name="last" value="<%- last %>" class="form-control"><span class="help-block"><%- errfor['last'] %></span></div><div class="control-group <%- errfor.company ? "has-error" : "" %>"><label class="control-label">Company Name:</label><input type="text" name="company" value="<%- company %>" class="form-control"><span class="help-block"><%- errfor.company %></span></div><div class="control-group <%- errfor.phone ? "has-error" : "" %>"><label class="control-label">Phone:</label><input type="text" name="phone" value="<%- phone %>" class="form-control"><span class="help-block"><%- errfor.phone %></span></div><div class="control-group <%- errfor.zip ? "has-error" : "" %>"><label class="control-label">Zip:</label><input type="text" name="zip" value="<%- zip %>" class="form-control"><span class="help-block"><%- errfor.zip %></span></div><div class="control-group"><button type="button" class="btn btn-primary btn-update">Update</button></div></fieldset></script><script type="text/template" id="tmpl-identity"><fieldset><legend>Identity</legend><div class="alerts"><% _.each(errors, function(err) { %><div class="alert alert-danger alert-dismissable"><button type="button" data-dismiss="alert" class="close">&times;</button><%- err %></div><% }); %>
-<% if (success) { %><div class="alert alert-info alert-dismissable"><button type="button" data-dismiss="alert" class="close">&times;</button>Changes have been saved.</div><% } %></div><div class="control-group <%- errfor.username ? "has-error" : "" %>"><label class="control-label">Username:</label><input type="text" name="username" value="<%= username %>" class="form-control"><span class="help-block"><%- errfor.username %></span></div><div class="control-group <%- errfor.email ? "has-error" : "" %>"><label class="control-label">Email:</label><input type="text" name="email" value="<%= email %>" class="form-control"><span class="help-block"><%- errfor.email %></span></div><div class="control-group"><button type="button" class="btn btn-primary btn-update">Update</button></div></fieldset></script><script type="text/template" id="tmpl-password"><fieldset><legend>Set Password</legend><div class="alerts"><% _.each(errors, function(err) { %><div class="alert alert-danger alert-dismissable"><button type="button" data-dismiss="alert" class="close">&times;</button><%- err %></div><% }); %></div><% if (success) { %><div class="alert alert-info alert-dismissable"><button type="button" data-dismiss="alert" class="close">&times;</button>A new password has been set.</div><% } %><div class="control-group <%- errfor.newPassword ? "has-error" : "" %>"><label class="control-label">New Password:</label><input type="password" name="newPassword" value="<%= newPassword %>" class="form-control"><span class="help-block"><%- errfor.newPassword %></span></div><div class="control-group <%- errfor.confirm ? "has-error" : "" %>"><label class="control-label">Confirm Password:</label><input type="password" name="confirm" value="<%= confirm %>" class="form-control"><span class="help-block"><%- errfor.confirm %></span></div><div class="control-group"><button type="button" class="btn btn-primary btn-password">Set Password</button></div></fieldset></script><script type="text/template" id="data-account"></script><script type="text/template" id="data-user"></script></div></div><div class="footer"><div class="container"><div class="inner"><span class="copyright pull-right">&#169;  </span><ul class="links"><li><a href="/">Home</a></li><li><a href="/logout/">Sign Out</a></li></ul><div class="clearfix"></div></div></div></div><div class="ajax-spinner"><img src="/media/ajax-pulse.gif"></div><!--if lte IE 9script(src='/layouts/ie-sucks.min.js?')--><script src="/layouts/core.min.js?undefined"></script><script src="/views/account/settings/index.min.js?undefined"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8"> 
+        <title>Bootply.com - Bootstrap 3 Control Panel</title>
+        <meta name="generator" content="Bootply" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" type="text/css" rel="stylesheet">
+        <!--[if lt IE 9]>
+          <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+
+
+
+
+
+
+
+
+
+        <!-- CSS code from Bootply.com editor -->
+        
+        <style type="text/css">
+            .navbar-static-top {
+  margin-bottom:20px;
+}
+
+i {
+  font-size:18px;
+}
+  
+footer {
+  margin-top:20px;
+  padding-top:20px;
+  padding-bottom:20px;
+  background-color:#efefef;
+}
+
+.nav>li .count {
+  position: absolute;
+  bottom: 12px;
+  right: 8px;
+  font-size: 10px;
+  font-weight: normal;
+  background: rgba(51,200,51,0.55);
+  color: rgba(255,255,255,0.9);
+  line-height: 1em;
+  padding: 2px 4px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  border-radius: 10px;
+}
+        </style>
+
+<style>
+/* Special class on .container surrounding .navbar, used for positioning it into place. */
+.navbar-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin-top: 20px;
+}
+
+/* Flip around the padding for proper display in narrow viewports */
+.navbar-wrapper .container {
+  padding-left: 0;
+  padding-right: 0;
+}
+.navbar-wrapper .navbar {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.navbar-content
+{
+    width:320px;
+    padding: 15px;
+    padding-bottom:0px;
+}
+.navbar-content:before, .navbar-content:after
+{
+    display: table;
+    content: "";
+    line-height: 0;
+}
+.navbar-nav.navbar-right:last-child {
+margin-right: 15px !important;
+}
+.navbar-footer 
+{
+    background-color:#DDD;
+}
+.navbar-footer-content { padding:15px 15px 15px 15px; }
+.dropdown-menu {
+padding: 0px;
+overflow: hidden;
+}
+</style>
+    </head>
+    
+    <!-- HTML code from Bootply.com editor -->
+    
+    <body  >
+        
+        <!-- Header -->
+<div id="top-nav" class="navbar navbar-inverse navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-toggle"></span>
+      </button>
+      <a class="navbar-brand" href="#">Control Panel</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+                                    <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Account
+                                        <b class="caret"></b></a>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <div class="navbar-content">
+                                                    <div class="row">
+                                                        <div class="col-md-5">
+                                                            <img src="http://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/twDq00QDud4/s120-c/photo.jpg"
+                                                                alt="Alternate Text" class="img-responsive" />
+                                                            <p class="text-center small">
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <span>{username}</span>
+                                                            <p class="text-muted small">
+                                                                {email}</p>
+                                                            <div class="divider">
+                                                            </div>
+                                                            <a href="/account/settings" class="btn btn-primary btn-sm active">View Profile</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="navbar-footer">
+                                                    <div class="navbar-footer-content">
+                                                        <div class="row">
+                                                            <div class="">
+                                                                <a href="/logout" class="btn btn-default btn-sm pull-right">Sign Out</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+<!--        
+        <li class="dropdown">
+          <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+            <i class="glyphicon glyphicon-user"></i> Admin <span class="caret"></span></a>
+          <ul id="g-account-menu" class="dropdown-menu" role="menu">
+            <li><a href="#">My Profile</a></li>
+            <li><a href="#"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
+          </ul>
+        </li>
+-->
+      </ul>
+    </div>
+  </div><!-- /container -->
+</div>
+<!-- /Header -->
+
+<!-- Main -->
+<div class="container">
+  
+  <!-- upper section -->
+  <div class="row">
+	<div class="col-md-3">
+      <!-- left -->
+      <a href="#"><strong><i class="glyphicon glyphicon-briefcase"></i> Toolbox</strong></a>
+      <hr>
+      
+      <ul class="nav nav-pills nav-stacked">
+        <li><a href="/account"><i class="glyphicon glyphicon-flash"></i> DashBorad</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-link"></i> Links</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-list-alt"></i> Reports</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-book"></i> Books</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Tools</a></li>
+        <li><a href="/account/settings"><i class="glyphicon glyphicon-time"></i> Account</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-plus"></i> Advanced..</a></li>
+      </ul>
+      
+      <hr>
+      
+  	</div><!-- /span-3 -->
+    <div class="col-md-9">
+      	
+      <!-- column 2 -->	
+      
+     
+       <a href="#"><strong><i class="glyphicon glyphicon-dashboard"></i>My Profile</strong></a>  
+            
+       <hr>
+
+      <!--tabs-->
+      <div class="container">
+        <ul class="nav nav-tabs" id="myTab">
+          <li class="active"><a href="#profile" data-toggle="tab">Profile</a></li>
+          <li><a href="#email" data-toggle="tab">Email</a></li>
+          <li><a href="#password" data-toggle="tab">Password</a></li>
+          <li><a href="#history" data-toggle="tab">Login History</a></li>
+        </ul>
+        
+        <div class="tab-content">
+          <div class="tab-pane active" id="profile">
+
+			<div class="row user-infos cyruxx">
+				<div class="">
+					<div class="panel panel-primary">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-3 col-lg-3 hidden-xs hidden-sm">
+									<img class="img-circle"
+										 src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=100"
+										 alt="User Pic">
+								</div>
+
+								<div class=" col-md-9 col-lg-9 hidden-xs hidden-sm">
+									<strong>Cyruxx</strong><br>
+									<table class="table table-user-information">
+										<tbody>
+											<tr>
+												<td>Username:</td>
+												<td>{username}</td>
+											</tr>
+											<tr>
+												<td>Registered since:</td>
+												<td>{createAt}</td>
+											</tr>
+											<tr>
+												<td>Email:</td>
+												<td>{email}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+          </div>
+          <div class="tab-pane" id="email">
+
+			<div class="row user-infos cyruxx">
+				<div class="panel panel-primary">
+					<div class="panel-body">
+						<div class="row">
+
+							  <form class="form col-md-12 center-block" method="post">
+								<div class="form-group">
+								  <input type="text" class="form-control" placeholder="email" name="email" />
+								</div>
+								<div class="form-group">
+								  <input type="text" class="form-control" name='_csrf' value='{_csrf}' />
+								</div>
+								<div class="form-group">
+								  <button class="btn btn-primary">Modify</button>
+								</div>
+							  </form>
+
+			</div>
+			</div>
+			</div>
+			</div>
+
+          </div>
+          <div class="tab-pane" id="password">
+
+			<div class="row user-infos cyruxx">
+				<div class="panel panel-primary">
+					<div class="panel-body">
+						<div class="row">
+
+							  <form class="form col-md-12 center-block" method="post">
+								<div class="form-group">
+								  <input type="password" class="form-control" placeholder="password" name="password" />
+								</div>
+								<div class="form-group">
+								  <input type="text" class="form-control" name='_csrf' value='{_csrf}' />
+								</div>
+								<div class="form-group">
+								  <button class="btn btn-primary">Modify</button>
+								</div>
+							  </form>
+
+			</div>
+			</div>
+			</div>
+			</div>
+
+          </div>
+
+          <div class="tab-pane" id="history">
+
+			<div class="row user-infos cyruxx">
+				<div class="panel panel-primary">
+					<div class="panel-body">
+						<div class="row">
+
+
+History
+
+
+
+			</div>
+			</div>
+			</div>
+			</div>
+
+          </div>
+        </div>
+      </div>
+      <!--/tabs-->
+         
+
+  	</div><!--/col-span-9-->
+    
+  </div><!--/row-->
+  <!-- /upper section -->
+  
+</div><!--/container-->
+<!-- /Main -->
+
+
+<footer class="text-center">This Bootstrap 3 dashboard layout is compliments of <a href="http://www.bootply.com/85850"><strong>Bootply.com</strong></a></footer>
+
+
+<div class="modal" id="addWidgetModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Add Widget</h4>
+      </div>
+      <div class="modal-body">
+        <p>Add a widget stuff here..</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn">Close</a>
+        <a href="#" class="btn btn-primary">Save changes</a>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dalog -->
+</div><!-- /.modal -->
+
+
+
+  
+        
+        <script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+
+        <script type='text/javascript' src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+
+
+
+
+        
+        <!-- JavaScript jQuery code from Bootply.com editor -->
+        
+        <script type='text/javascript'>
+        
+        $(document).ready(function() {
+        
+            
+        
+        });
+        
+        </script>
+        
+    </body>
+</html>
