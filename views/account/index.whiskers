@@ -13,8 +13,8 @@
 
 
 		<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-		<link href="./styles/rickshaw.css" rel="stylesheet">
-		<script src="./js/rickshaw.js" type="application/javascript"></script>
+		<link href="/styles/rickshaw.css" rel="stylesheet">
+		<script src="/js/rickshaw.js" type="application/javascript"></script>
 
 
 
