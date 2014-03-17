@@ -1,10 +1,36 @@
-<style>
-    body {
-        margin-top: 50px;
-    }
+        <div class="row">
+          <div class="col-lg-12">
+            <h1>Account <small>A Blank Slate</small></h1>
+            <ol class="breadcrumb">
+              <li><a href="index.html"><i class="icon-dashboard"></i> Dashboard</a></li>
+              <li class="active"><i class="icon-file-alt"></i> Account</li>
+            </ol>
+          </div>
+        </div><!-- /.row -->
 
-    footer {
-        margin: 50px 0;
-    }
-</style>
-contact index.ejs
+		<div class="row">
+			<div class="col-lg-1 hidden-xs hidden-sm">
+				<img class="img-circle"
+						src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=100"
+						alt="User Pic">
+			</div>
+
+			<div class="col-lg-2 hidden-xs hidden-sm">
+				<strong><%- username %></strong><br>
+				<table class="table table-user-information">
+					<tbody>
+						<tr>
+							<td>Email:</td>
+							<td><%- email %></td>
+						</tr>
+						<tr>
+							<td>Registered since:</td>
+							<td><%- createAt %></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+        <!-- /.row -->
+
+

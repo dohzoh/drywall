@@ -14,9 +14,16 @@
          * `LoginController.index`
          */
         , index: function (req, res) {
-            return res.view({
-                layout: self.layout
-            });
+            if (req.method !== 'POST') {
+                return res.view({
+                    layout: self.layout
+                });
+            }
+
+            else {
+                // Send a Default View
+                res.redirect("/account", 302)
+            }
         }
         /**
          * `LoginController.forgot`

@@ -10,14 +10,14 @@
     <title>Basic Company Template for Bootstrap 3</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/styles/bootstrap.css" rel="stylesheet">
     <!--[if lt IE 9]>
       <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
 
     <!-- Custom CSS for the 'Heroic Features' Template -->
-    <link href="css/heroic-features.css" rel="stylesheet">
+<!--    <link href="css/heroic-features.css" rel="stylesheet"> -->
 </head>
 
 <body>
@@ -41,14 +41,27 @@
                     </li>
                     <li><a href="/contact">Contact</a>
                     </li>
+                    <li><a href="/signup">Signup</a>
+                    </li>
                 </ul>
+                  <ul class="nav navbar-nav navbar-right">
+                    <li>
+                      <a href="/login/">
+                        <i class="fa fa-user">
+                        </i>
+                        Sign In
+                      </a>
+                    </li>
+                  </ul>
             </div>
             <!-- /.navbar-collapse -->
         </div>
         <!-- /.container -->
     </nav>
 
+
 <%- body %>
+
 
         <hr>
 
@@ -69,6 +82,7 @@
     <script src="/js/socket.io.js"></script>
     <script src="/js/sails.io.js"></script>
     <script src="/js/connection.example.js"></script>
+    <script src="/js/validate.min.js"></script>
 
 </body>
 

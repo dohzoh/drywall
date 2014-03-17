@@ -16,9 +16,18 @@
          * `SignupController.index`
          */
         , index: function (req, res) {
-            return res.view({
-                layout: self.layout
-            });
+            if (req.method !== 'POST') {
+                return res.view({
+                    layout: self.layout
+                });
+            }
+
+            else {
+                // Send a Default View
+                return res.view("signup/confirm", {
+                    layout: self.layout
+                });
+            }
         }
         /**
          * `SignupController.social`
@@ -34,7 +43,10 @@
          */
 
         , activate: function (req, res) {
-            return res.view({
+            return res.view("signup/success", {
+                layout: self.layout
+            });
+            return res.view("signup/failed", {
                 layout: self.layout
             });
         }

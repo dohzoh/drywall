@@ -8,15 +8,24 @@
     "use strict";
 
     var self = {
-        layout: "layoutGuest"
+        layout: "layoutMember"
 
         /**
          * `WithdrawController.index`
          */
         , index: function (req, res) {
-            return res.view({
-                layout: self.layout
-            });
+            if (req.method !== 'POST') {
+                return res.view({
+                    layout: self.layout
+                });
+            }
+
+            else {
+                // Send a Default View
+                return res.view("withdraw/success", {
+                    layout: self.layout
+                });
+            }
         }
     };
 
