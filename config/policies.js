@@ -16,19 +16,7 @@ module.exports.policies = {
 
   // Default policy for all controllers and actions
   // (`true` allows public access) 
-    '*': "isAuthenticated"
-//    , 'account':{'*': false}
-//    , 'admin':{'*': false}
-//    , 'withdraw':{'*': false}
-
-    , 'mail':{'*': true}
-    , 'index':{'*': true}
-    , 'about':{'*': true}
-    , 'contact':{'*': true}
-    , 'login':{'*': true}
-    , 'signup':{'*': true}
-    , 'logout':{'*': true}
-
+  '*': true
 
   /*
 	// Here's an example of adding some policies to a controller

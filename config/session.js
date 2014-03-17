@@ -15,19 +15,16 @@ module.exports.session = {
   // Session secret is automatically generated when your new app is created
   // Replace at your own risk in production-- you will invalidate the cookies of your users,
   // forcing them to log in again. 
-    secret: 'Ignite the Dynamo!'
-    , adapter: null
+  secret: '8a16276c824014271ec7fd5549ef077a',
 
-    // Name of the table you would like to use for sessions.
-    // Defaults to 'sessions'
-    , table: 'zz_session'
 
-    // Optional path to AWS credentials (loads credentials from environment variables by default)
-    , AWSConfigPath: './credentials.json'
-
-    // Optional. How often expired sessions should be cleaned up.
-    // Defaults to 600000 (10 minutes).
-    , reapInterval: 600000
+  // Set the session cookie expire time
+  // The maxAge is set by milliseconds, the example below is for 24 hours
+  //
+  // cookie: {
+  //   maxAge: 24 * 60 * 60 * 1000  
+  // }
+  
 
   // In production, uncomment the following lines to set up a shared redis session store
   // that can be shared across multiple Sails.js servers
