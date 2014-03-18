@@ -1,15 +1,33 @@
 /**
- * Social.js
+ * Social
  *
- * @description :: TODO: You might write a short summary of how this model works and what it represents here.
+ * @module      :: Model
+ * @description :: A short summary of how this model works and what it represents.
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
+(function(){
+    "use strict"
 
-module.exports = {
+    var self = {
+        attributes: {
+            // OAuth Service uid
+            oauth_uid:{
+                primaryKey: true    // primary hash key(default id)
+            }
+            // OAuth Service name   (e.g: twitter, facebook, google, )
+            , oauth_provider:{
+                primaryKey: true    // primary range key(default id)
+            }
+            // user_id
+            , user_id:{
+                type: 'string'
+                , index: true
+            }
+        }
 
-	attributes: {
+    };
+    module.exports = self;
+
+})();
 
 
-	}
-
-};

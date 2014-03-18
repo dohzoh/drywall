@@ -18,6 +18,10 @@
 
     <!-- Custom CSS for the 'Heroic Features' Template -->
 <!--    <link href="css/heroic-features.css" rel="stylesheet"> -->
+<script>
+    var validation = false;
+
+</script>
     <style>
         .LV_validation_message{
             font-weight:bold;
@@ -116,9 +120,11 @@
         }
     </script>
     <script src="/js/bootstrap.js"></script>
+<!--
     <script src="/js/socket.io.js"></script>
     <script src="/js/sails.io.js"></script>
     <script src="/js/connection.example.js"></script>
+-->
     <script src="/js/livevalidation_standalone.compressed.js"></script>
 
     <script type="text/javascript">
@@ -147,25 +153,32 @@
                 onlyOnSubmit (optional) - {Boolean} - if it is part of a form, whether you want it to validate it only when the form is submitted (DEFAULT: false)
             */
             // username validation
+            if (validation)
+            {
+
             try {
-                var username = new LiveValidation('username', { /*validMessage: "", */onInvalid: onInvalid, onValid: onValid})
+                var username = new LiveValidation('username', { /*validMessage: "", */onInvalid: onInvalid, onValid: onValid })
+                    .add( Validate.Presence )
                     .add(Validate.Format, { pattern: /^[a-zA-Z0-9_-]+$/i })
                     .add(Validate.Length, { minimum: 4 })
             }
             catch (e) { }
             try {
                 var email = new LiveValidation('email', { /*validMessage: "", */onInvalid: onInvalid, onValid: onValid })
+                    .add(Validate.Presence)
                     .add(Validate.Email);
             }
             catch (e) { }
             try {
                 var password = new LiveValidation('password', { /*validMessage: "", */onInvalid: onInvalid, onValid: onValid })
+                    .add(Validate.Presence)
                     .add(Validate.Format, { pattern: /^[a-zA-Z0-9 -/:-@\[-\`\{-\~]+$/i })
                     .add(Validate.Length, { minimum: 6 })
             }
             catch (e) { }
             try {
                 var confirm = new LiveValidation('confirm', { /*validMessage: "", */onInvalid: onInvalid, onValid: onValid })
+                    .add(Validate.Presence)
                     .add(Validate.Confirmation, { match: 'password' });
             }
             catch (e) { }
@@ -177,6 +190,7 @@
 */
             // Generate a simple captcha
 
+            }
 
         });
     </script>
