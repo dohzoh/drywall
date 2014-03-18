@@ -1,7 +1,6 @@
 {
   "name": "pj-sails",
-  "private": true,
-  "version": "0.0.0",
+  "version": "0.1.o",
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
@@ -22,6 +21,7 @@
     "grunt-contrib-cssmin": "~0.6.1",
     "grunt-contrib-less": "~0.9.0",
     "grunt-contrib-coffee": "~0.7.0"
+	, "sails-dynamodb": "git://github.com/dohzoh/sails-dynamodb.git#master"
   },
   "scripts": {
     "start": "node app.js",
@@ -33,5 +33,5 @@
     "url": "git://github.com/dozo/pj-sails.git"
   },
   "author": "dozo",
-  "license": ""
+  "license": "MIT"
 }

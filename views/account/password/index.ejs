@@ -9,25 +9,22 @@
           </div>
         </div><!-- /.row -->
 
-
-        <div class="row">
-          <div class="col-lg-4">
-            <form role="form" method="POST">
-
-              <div class="form-group input-group">
-                <span class="input-group-addon">@</span>
-                <input type="password" class="form-control" placeholder="password">
-              </div>
-              <div class="form-group input-group">
-                <span class="input-group-addon">@</span>
-                <input type="password" class="form-control" placeholder="confirm password">
-              </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-horizontal" method="POST">
+                <div class="form-group">
+                    <input type="password" class="form-control input-lg" placeholder="new password" name="password" id="password" />
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control input-lg" placeholder="confirm password" name="confirm" id="confirm" />
+                </div>
                 <div class="form-group">
                     <input type="text" class="form-control" name='_csrf' value='<%- _csrf %>' />
                 </div>
-              <button type="submit" class="btn btn-default">Modify</button>
-            </div>
-          </div>
-        </div><!-- /.row -->
-
+                <button type="submit" class="btn btn-default">Modify</button>
+            </form>
+        </div>
+    </div>
+</div><!-- /.row -->
 

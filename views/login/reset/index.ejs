@@ -42,27 +42,30 @@
         }
 </style>
 <div class="container">
-    <form class="form-signin" method="POST">
-        <h2 class="form-signin-heading">Reset Your Password</h2>
-        <div class="form-group">
-            <input type="text" class="form-control input-lg" placeholder="username" name="username" />
+    <div class="row">
+        <div class="col-md-6" style="float:none; margin: 0 auto;">
+            <form class="form-horizontal" method="POST">
+                <h2 class="form-signin-heading">Reset Your Password</h2>
+                <div class="form-group">
+                    <input type="text" class="form-control input-lg" placeholder="username" name="username" id="username" />
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control input-lg" placeholder="new password" name="password" id="password" />
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control input-lg" placeholder="confirm password" name="confirm" id="confirm" />
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name='id' value='<%- id %>' />
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name='_csrf' value='<%- _csrf %>' />
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-lg">Reset</button><br />
+                </div>
+            </form>
         </div>
-        <div class="form-group">
-            <input type="password" class="form-control input-lg" placeholder="new password" name="password" />
-        </div>
-        <div class="form-group">
-            <input type="password" class="form-control input-lg" placeholder="confirm password" name="confirm" />
-        </div>
-        <div class="form-group">
-            <input type="text" class="form-control" name='id' value='<%- id %>' />
-        </div>
-        <div class="form-group">
-            <input type="text" class="form-control" name='_csrf' value='<%- _csrf %>' />
-        </div>
-        <div class="form-group">
-            <button class="btn btn-primary btn-lg">Reset</button><br />
-        </div>
-    </form>
-
+    </div>
 </div> <!-- /container -->
 

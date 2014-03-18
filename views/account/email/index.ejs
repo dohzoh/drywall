@@ -1,29 +1,27 @@
-        <div class="row">
-          <div class="col-lg-12">
-            <h1>Account <small>Email Change</small></h1>
-            <ol class="breadcrumb">
-              <li><a href="index.html"><i class="icon-dashboard"></i> Dashboard</a></li>
-              <li class="active"><i class="icon-file-alt"></i> Account</li>
-              <li class="active"><i class="icon-file-alt"></i> Email Change</li>
-            </ol>
-          </div>
-        </div><!-- /.row -->
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Account <small>Email Change</small></h1>
+        <ol class="breadcrumb">
+            <li><a href="index.html"><i class="icon-dashboard"></i> Dashboard</a></li>
+            <li class="active"><i class="icon-file-alt"></i> Account</li>
+            <li class="active"><i class="icon-file-alt"></i> Email Change</li>
+        </ol>
+    </div>
+</div><!-- /.row -->
 
 
-        <div class="row">
-          <div class="col-lg-4">
-            <form role="form" method="POST">
-
-              <div class="form-group input-group">
-                <span class="input-group-addon">@</span>
-                <input type="text" class="form-control" placeholder="email">
-              </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-horizontal" method="POST">
+                <div class="form-group">
+                    <input type="text" id="email" class="form-control input-lg" placeholder="email" name="email" />
+                </div>
                 <div class="form-group">
                     <input type="text" class="form-control" name='_csrf' value='<%- _csrf %>' />
                 </div>
-              <button type="submit" class="btn btn-default">Modify</button>
-            </div>
-          </div>
-        </div><!-- /.row -->
-
-
+                <button type="submit" class="btn btn-default">Modify</button>
+            </form>
+        </div>
+    </div>
+</div><!-- /.row -->
