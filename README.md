@@ -5,10 +5,8 @@ Drywall DynamoDB
 
 
 ```bash
-$ git clone https://github.com/dohzoh/drywall.git -b dynamodb
+$ git clone https://github.com/dohzoh/drywall.git -b develop
 $ cd drywall && npm install
-$ git clone https://github.com/dohzoh/sails-dynamodb.git node_modules/sails-dynamodb -b 0.9
-$ cd node_modules/sails-dynamodb && npm install && cd ../../
 $ cp ./credentials.example.json ./credentials.json  # & put your amazon keys
 ```
 Edit credentials.json
@@ -20,6 +18,11 @@ Edit credentials.json
     , "region": "us-east-1"
 }
 ```
+Ignition
+```bash
+$ sails lift
+```
+
 Todo: to npm package
 
 
