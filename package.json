@@ -32,6 +32,7 @@
     , "authom": "0.4.x"
     , "whiskers": "0.3.x"
     , "nodemailer": "0.6.x"  
+    , "node-gyp": "0.10.x"
   },
   "scripts": {
     "start": "node app.js",

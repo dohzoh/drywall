@@ -11,28 +11,32 @@
 
     var self = {
         layout: "layoutGuest"
+        
+        , viewContainer: {
+            layout: "layoutGuest"
+            , cache : false 
+            , username: ""
+            , email: ""
+            , password: ""
+            , confirm: ""
+            , error: false
+            , errors: {
+                name: []
+                , email: []
+                , password: []
+                , confirm: []
+            }
+        }
 
         /**
          * `SignupController.index`
          */
         , index: function (req, res) {
-            var container = {
-                layout: self.layout
-                , username: ""
-                , email: ""
-                , password: ""
-                , confirm: ""
-                , error: false
-                , errors: {
-                    username: ""
-                    , email: ""
-                    , password: ""
-                    , confirm: ""
-                }
-            };
+            var container = self.viewContainer;
 
             // GET 
             if (req.method !== 'POST') {
+                console.log(container);
                 return res.view(container);
             }
             // POST
@@ -46,7 +50,12 @@
                 // Send a Default View
                 require("async").waterfall(self._signupWaterfall(req, res, container), function (error, results) {
                     if (error) {
-                    	container.errors = error
+                    	container.error = error;
+                    	for(var key in error){
+                    	    if(require("lodash").isArray(error[key]))
+                    	       container.errors[key] = error[key];
+                    	}
+                    	
                         sails.log.warn("signup failed", error);
                         return res.view(container);
                     }
@@ -91,9 +100,22 @@ error.ValidationError { name:
   email: 
    [ { rule: 'email',
        message: 'Validation error: "email" is not of type "email"' } ] }
-*/       
-                        if ("ValidationError" in error) callback(error.ValidationError);
-	                    else callback();
+*/
+                        if( error ){
+                            if ("ValidationError" in error) 
+                                error = error.ValidationError;
+                        }
+                        
+                        if (require("lodash").isEmpty(container.confirm)) { 
+                            require("lodash").merge(error,{confirm:[ { rule: 'required', message: 'confirm required' } ] });
+                        }; 
+                        if (! require("lodash").isEqual(container.password, container.confirm)) { 
+                            require("lodash").merge(error,{confirm:[ { rule: 'match', message: 'Don\'t Match confirm password' } ] });
+                        }
+       
+                        if( error )callback(error);
+                        else callback();
+                        
                     	
 //                    	sails.log("validate err", err);
 //                    	sails.log("validate res", res);
@@ -113,29 +135,19 @@ error.ValidationError { name:
                 }
 			// create user
                 , function(callback){
-                	User.validate({
-                    	name: container.username
-                    	, email: container.email
-                    	, password: container.password
-                    }, function(err, res){
-                    	sails.log("validate err", err);
-                    	sails.log("validate res", res);
-                    });
-                	
                 	
                     User.create({
                     	name: container.username
                     	, email: container.email
                     	, password: container.password
                     }, function (error, userInfo) {
-                        if ("ValidationError" in error) {
-		                    if (! require("lodash").isEmpty(error.ValidationError.name)) { container.error = container.errors.username = new Error(error.ValidationError.name); }
-		                    if (! require("lodash").isEmpty(error.ValidationError.email)) { container.error = container.errors.email = new Error(error.ValidationError.email); }
-		                    if (! require("lodash").isEmpty(error.ValidationError.password)) { container.error = container.errors.password = new Error(error.ValidationError.password); }
-		                    sails.log("error.ValidationError", error.ValidationError);
+                        if(error){
+                            if ("ValidationError" in error) 
+                                callback(error.ValidationError);
+                            else
+                                callback(error);
                         }
-	                    if (container.error) callback(container.error);
-	                    else callback(null, userInfo);
+                        else callback(null, userInfo);
                     });
                 }
                 // send email
@@ -144,7 +156,7 @@ error.ValidationError { name:
 		                name: userInfo.name
 		                , email: userInfo.email
 		                , url: User.getTokenUrl(userInfo.user_id, userInfo.activationToken)
-		            }
+		            };
 		            res.render('activate_txt', emailInfo, function(err, body){
 		                if(err) sails.log.debug(err);
 		                // Send a JSON response
