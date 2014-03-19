@@ -116,26 +116,11 @@ error.ValidationError { name:
                         if( error )callback(error);
                         else callback();
                         
-                    	
-//                    	sails.log("validate err", err);
-//                    	sails.log("validate res", res);
                     });
                 	
-                	
-/*                	
-                	
-                    if (require("lodash").isEmpty(container.username)) { container.error = container.errors.username = new Error("username required"); }
-                    if (require("lodash").isEmpty(container.email)) { container.error = container.errors.email = new Error("email required"); }
-                    if (require("lodash").isEmpty(container.password)) { container.error = container.errors.password = new Error("password required"); }
-                    if (require("lodash").isEmpty(container.confirm)) { container.error = container.errors.confirm = new Error("confirm required"); }
-                    if (! require("lodash").isEqual(container.password, container.confirm)) { container.error = container.errors.confirm = new Error("Don't Match confirm password"); }
-                    if (container.error) callback(container.error);
-                    else callback();
-*/                    
                 }
 			// create user
                 , function(callback){
-                	
                     User.create({
                     	name: container.username
                     	, email: container.email

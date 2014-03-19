@@ -6,7 +6,7 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 (function(){
-    'use strict'
+    'use strict';
     
     var self = {
         // column list
@@ -15,6 +15,8 @@
             // you must NOT use primarykey your have special reason.
             user_id:{
                 primaryKey: true    // primary hash key(default id)
+                , type: 'string'
+
             }
             // user name and login id
             , name: {
