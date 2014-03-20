@@ -29,11 +29,21 @@ module.exports.routes = {
   '/': {
       controller: 'HomeController'
       , action: "index"
-  },
+  }
 
 
   // Custom routes here...
-
+    /** Create the route to handle user activations */
+    // email auth
+    , 'get /signup/activate/:id/:token': {
+        controller: 'SignupController',
+        action: 'activate'
+    }
+    // password reset
+    , 'get /login/reset/:id': {
+        controller: 'LoginController',
+        action: 'reset'
+    }
 
   // If a request to a URL doesn't match any of the custom routes above, it is matched 
   // against Sails route blueprints.  See `config/blueprints.js` for configuration options

@@ -25,7 +25,7 @@ module.exports.views = {
     // For more options, check out the docs:
     // https://github.com/balderdashy/sails-wiki/blob/0.9/config.views.md#engine
 
-    engine: 'ejs'
+    engine: 'hogan'
   
 
 
@@ -49,7 +49,7 @@ module.exports.views = {
     // to your layout file from `views/` folder. (the file extension, ".ejs", should be omitted)
     //
 
-    , layout: 'layoutMember'
+//    , layout: 'layoutMember'
 
 
 
@@ -66,6 +66,4 @@ module.exports.views = {
     // But you might override that in some of your controllers with:
     // layout: 'layouts/internal'
 
-    , cache: false 
-    , ext: "html"
 };

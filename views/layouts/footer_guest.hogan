@@ -1,0 +1,102 @@
+﻿        <hr>
+
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Company 2013</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    <!-- /.container -->
+
+    <!-- JavaScript -->
+    <script src="/js/zepto.js"></script>
+    <script>
+        if (!window.jQuery) {
+            Zepto.browser = { webkit: true };
+            var $ = window.jQuery = Zepto;
+        }
+    </script>
+    <script src="/js/bootstrap.js"></script>
+<!--
+    <script src="/js/socket.io.js"></script>
+    <script src="/js/sails.io.js"></script>
+    <script src="/js/connection.example.js"></script>
+-->
+    <script src="/js/livevalidation_standalone.compressed.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var onInvalid = function (options) {
+                this.insertMessage(this.createMessageSpan());
+                this.addFieldClass();
+//                console.log("onInvalid", this);
+            }
+            var onValid = function (options) {
+                var span = document.createElement('span');
+                span.setAttribute("class", "glyphicon glyphicon-ok form-control-feedback")
+                this.insertMessage(span);
+                this.addFieldClass();
+                this.element.parentNode.className = "form-group has-sccess has-feedback";
+//                console.log("onValid", options);
+            }
+
+            /*
+                validMessage (optional) - {String} - message to be used upon successful validation (DEFAULT: “Thankyou!”)
+                onValid (optional) - {Function} - function to execute when field passes validation (DEFAULT: function(){ this.insertMessage( this.createMessageSpan() ); this.addFieldClass(); } )
+                onInvalid (optional) - {Function} - function to execute when field fails validation (DEFAULT: function(){ this.insertMessage( this.createMessageSpan() ); this.addFieldClass(); })
+                insertAfterWhatNode (optional) - {mixed} - reference or id of node to have the message inserted after (DEFAULT: the field that is being validated)
+                onlyOnBlur (optional) - {Boolean} - whether you want it to validate as you type or only on blur (DEFAULT: false)
+                wait (optional) - {Integer} - the time you want it to pause from the last keystroke before it validates (milliseconds) (DEFAULT: 0)
+                onlyOnSubmit (optional) - {Boolean} - if it is part of a form, whether you want it to validate it only when the form is submitted (DEFAULT: false)
+            */
+            // username validation
+            if (validation)
+            {
+
+            try {
+                var username = new LiveValidation('username', { /*validMessage: "", */onInvalid: onInvalid, onValid: onValid })
+                    .add( Validate.Presence )
+                    .add(Validate.Format, { pattern: /^[a-zA-Z0-9_-]+$/i })
+                    .add(Validate.Length, { minimum: 4 })
+            }
+            catch (e) { }
+            try {
+                var email = new LiveValidation('email', { /*validMessage: "", */onInvalid: onInvalid, onValid: onValid })
+                    .add(Validate.Presence)
+                    .add(Validate.Email);
+            }
+            catch (e) { }
+            try {
+                var password = new LiveValidation('password', { /*validMessage: "", */onInvalid: onInvalid, onValid: onValid })
+                    .add(Validate.Presence)
+                    .add(Validate.Format, { pattern: /^[a-zA-Z0-9 -/:-@\[-\`\{-\~]+$/i })
+                    .add(Validate.Length, { minimum: 6 })
+            }
+            catch (e) { }
+            try {
+                var confirm = new LiveValidation('confirm', { /*validMessage: "", */onInvalid: onInvalid, onValid: onValid })
+                    .add(Validate.Presence)
+                    .add(Validate.Confirmation, { match: 'password' });
+            }
+            catch (e) { }
+/*
+            try{
+                var password = new LiveValidation('hoge');
+            }
+            catch(e){}
+*/
+            // Generate a simple captcha
+
+            }
+
+        });
+    </script>
+
+
+
+</body>
+
+</html>

@@ -10,29 +10,23 @@
     "use strict";
 
     var self = {
-        layout: "layoutGuest"
         
-        , viewContainer: {
-            layout: "layoutGuest"
-            , cache : false 
-            , username: ""
-            , email: ""
-            , password: ""
-            , confirm: ""
-            , error: false
-            , errors: {
-                name: []
-                , email: []
-                , password: []
-                , confirm: []
+        viewContainer: {
+// /media/sf_Shared/intellij/drywall/views/            
+            partials: {
+                header: "../layouts/header_guest"
+                , footer: "../layouts/footer_guest"
+
             }
+            , error: false
+            , errors: {}
         }
 
         /**
          * `SignupController.index`
          */
         , index: function (req, res) {
-            var container = self.viewContainer;
+            var container = require("lodash").cloneDeep(self.viewContainer) ;
 
             // GET 
             if (req.method !== 'POST') {
@@ -41,11 +35,11 @@
             }
             // POST
             else {
-                var body = req.params.all();
-                container.username = body.username;
-                container.email = body.email;
-                container.password = body.password;
-                container.confirm = body.confirm;
+                var params = req.params.all();
+                container.username = params.username;
+                container.email = params.email;
+                container.password = params.password;
+                container.confirm = params.confirm;
                 console.log("container", container);
                 // Send a Default View
                 require("async").waterfall(self._signupWaterfall(req, res, container), function (error, results) {
@@ -60,11 +54,8 @@
                         return res.view(container);
                     }
                     else {
-                        return res.view("signup/confirm", {
-                            layout: self.layout
-                        });
+                        return res.view("signup/confirm", container);
                     }
-
 
                 });
 
@@ -119,7 +110,23 @@ error.ValidationError { name:
                     });
                 	
                 }
-			// create user
+			// check user
+                , function(callback){
+                    User.findOne({name:container.username}, function(error, userInfo){
+                        if(error){callback(error);}
+                        else{
+                            if(! require("lodash").isEmpty(userInfo)){
+                                // exist user
+                                callback({name:[ { rule: 'exists', message: 'Exists User' } ] });
+                            }
+                            else{
+                                // ok
+                                callback();
+                            }
+                        };
+                    });
+                }
+            // create user
                 , function(callback){
                     User.create({
                     	name: container.username
@@ -164,105 +171,93 @@ error.ValidationError { name:
             ];
         }
 
-        , _signupNullCheck: function (req, res, container, callback) {
-        }
 
+        /**
+         * `SignupController.activate`
+         */
 
-        , _createUser: function (req, res) {
-            User.create({
-                // add user parameter
-                name: req.body.username
-                    , email: req.body.email
-                    , password: req.body.password
-                    , encrypted_password: req.body.password
-                //                    , isDeleted: false
-            }
-                , function (error, userInfo) {
-                    if (error) {
-                        if ("ValidationError" in error) {
-                            console.log(error.ValidationError.name);
-                            console.log(error.ValidationError.email);
-                            console.log(error.ValidationError.password);
-                        }
-
-
-                        console.warn("user create failed", error);
-                        return res.view();
+        , activate: function (req, res) {
+            var container = require("lodash").cloneDeep(self.viewContainer) ;
+            
+            var params = req.params.all();
+            // see routes.js
+            container.user_id = params.id;
+            container.token = params.token;
+            
+            require("async").waterfall(self._activateWaterfall(req, res, container), function (error, results) {
+                if (error) {
+                    container.error = error;
+                    for(var key in error){
+                        if(require("lodash").isArray(error[key]))
+                           container.errors[key] = error[key];
                     }
-                    else {
-                        sails.log.debug("create success", userInfo);
-                        self._sendEmail(req, res, userInfo, function (err) {
-                            if (!err) {
-                                sails.log.debug("set session");
-                                self._setSession(req, res, userInfo);
-                                return res.view("signup/confirm");
-                            }
-                            return res.view("signup/failed");
-                        });
-                    }
+                    
+                    sails.log.warn("signup failed", error);
+                    return res.view("signup/failed", container);
                 }
-            );
+                else {
+                    return res.view("signup/success", container);
+                }
+            });
+            
         }
 
-        , _sendEmail: function (req, res, userInfo, cb) {
-            var emailInfo = {
-                name: userInfo.name
-                , email: userInfo.email
-                , url: User.getTokenUrl(userInfo.user_id, userInfo.activationToken)
-            }
-            res.render('activate_txt', emailInfo, function (err, body) {
-                if (err) sails.log.debug(err);
-                    // Send a JSON response
-                else {
-                    emailInfo.text = body;
-                    nodemailer.send(emailInfo, function (err, response) {
-                        if (err) {
-                            sails.log.warn('send mail error', err);
-                            cb(err);
-                        }
-                        else {
-                            sails.log.debug('nodemailer sent', response);
-                            cb();
+        
+        , _activateWaterfall: function (req, res, container) {
+            return[
+            // user check
+                function(callback){
+                    User.findOne({
+                        user_id: container.user_id
+                    }, function(error, userInfo){
+                        if(error){callback(error);}
+                        else{
+                        // data not found                            
+                            if(require("lodash").isEmpty(userInfo)){
+                                // exist user
+                                require("lodash").merge(error,{name:[ { rule: 'notexists', message: 'Not Exists User' } ]});
+                            }
+       
+                        // activated
+                            if(userInfo.activate){
+                                sails.log.warn("was Activated, user_id:", container.user_id);
+                                res.redirect("/login", 302);
+                                require("lodash").merge(error,{name:[ { rule: 'activated', message: 'Is Active User' } ]});
+                            }                            
+                            
+                         // not same authtoken
+                            if(container.token !== userInfo.activationToken){
+                                sails.log.warn("Activation Failed, token:", container.token);
+                                require("lodash").merge(error,{name:[ { rule: 'match', message: 'Don\'t Match Authenication Token' } ]});
+                            }                            
+                                
+                            if( error )callback(error);
+                            else callback(null, userInfo);
                         }
                     });
+                    
                 }
+            // data update
+                , function(userInfo, callback){
+                    // we now have a model with instance methods attached
+                    // update an attribute value
+                    userInfo.activated = true;
 
-            });
-        }
-
-        , _setSession: function (req, res, user) {
-            req.session.user_id = user.user_id;
-            delete user.password;
-            req.session.user_info = user;
-        }
-        , _setSessionActivated: function (req, res, user) {
-            req.session.authenticated = true;
-        }
-
-        , _updateUser: function (req, res, userInfo, cb) {
-            User.update({
-                user_id: userInfo.user_id
-            }, {
-                activated: true
-            }, function (err, user) {
-                // Error handling
-                if (err) {
-                    sails.log.warn("Data Update Failed", err);
-                    cb(err);
-                    // Updated users successfully!
-                } else {
-                    sails.log.debug("User activated:", user);
-                    self._setSessionActivated(req, res);
-                    cb();
+                    // save the updated value
+                    userInfo.save(function(error, userInfo) {
+                        // value has been saved
+                        if( error )callback(error);
+                        else{
+                            req.session.user_id = userInfo.user_id;
+                            delete userInfo.password;
+                            req.session.user_info = userInfo;                    
+                            req.session.authenticated = true;
+                            callback();
+                        }
+                    });                
                 }
-            });
+            ];
         }
-
-
-
-
-
-
 
         /**
          * `SignupController.social`
@@ -270,18 +265,6 @@ error.ValidationError { name:
 
         , social: function (req, res) {
             return res.view({
-                layout: self.layout
-            });
-        }
-        /**
-         * `SignupController.activate`
-         */
-
-        , activate: function (req, res) {
-            return res.view("signup/success", {
-                layout: self.layout
-            });
-            return res.view("signup/failed", {
                 layout: self.layout
             });
         }

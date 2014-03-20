@@ -1,3 +1,5 @@
+{{> header}}
+
 <style>
     body {
         margin-top: 50px;
@@ -22,3 +24,5 @@
         </div>
     </div>
 </div>
+
+{{> footer}}
