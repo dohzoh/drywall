@@ -8,11 +8,11 @@
      * @returns {_L1.self}
      */
     var self = {
-        factory: function(req){
-            return new self.container(req);
+        factory: function(req, res){
+            return new self.container(req, res);
         }
         
-        , container: function(req){
+        , container: function(req, res){
         // set default property
             this.errors = {};
             
@@ -25,6 +25,9 @@
             this.partials = {
                 body: defaultView
             };
+            
+            this._csrf = req.csrfToken();
+             
         }
     }        
     

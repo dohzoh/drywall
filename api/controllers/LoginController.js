@@ -14,9 +14,9 @@
          * `LoginController.index`
          */
         , index: function (req, res) {
-            var container = viewContainer.factory(req);    // @see api/services/viewContainer.js
+            var container = viewContainer.factory(req, res);    // @see api/services/viewContainer.js
         // logined user
-            sails.log("req.session", req.session);
+//            sails.log("req.session", req.session);
             if ( typeof req.session !== 'undefined' && req.session.authenticated) {
                 console.log('authentication success');
                 res.redirect("/account/", 302);
@@ -126,7 +126,7 @@
          */
 
         , forgot: function (req, res) {
-            var container = viewContainer.factory(req);    // @see api/services/viewContainer.js
+            var container = viewContainer.factory(req, res);    // @see api/services/viewContainer.js
 
             if (req.method !== 'POST') {
                 
@@ -262,7 +262,7 @@
          */
 
         , reset: function (req, res) {
-            var container = viewContainer.factory(req);    // @see api/services/viewContainer.js
+            var container = viewContainer.factory(req, res);    // @see api/services/viewContainer.js
 
             var params = req.params.all();
             container.token = params.token;

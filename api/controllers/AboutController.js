@@ -14,7 +14,7 @@
         * `AboutController.index`
         */
         , index: function (req, res) {
-            var container = viewContainer.factory(req);    // @see api/services/viewContainer.js
+            var container = viewContainer.factory(req, res);    // @see api/services/viewContainer.js
 
             return res.view(self.layout,container);
         }

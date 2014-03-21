@@ -14,7 +14,7 @@
          * `AccountController.index`
          */
         , index: function (req, res) {
-            var container = viewContainer.factory(req);    // @see api/services/viewContainer.js
+            var container = viewContainer.factory(req, res);    // @see api/services/viewContainer.js
             
             container.username = "default username";
             container.email = "default email";

@@ -27,7 +27,13 @@ module.exports.express = {
         DynamoDBStore = require('connect-dynamodb')(connect);
         app
             .use(connect.cookieParser())
-            .use(connect.session({ store: new DynamoDBStore(options), secret: options.secret}));
+            .use(connect.session({ store: new DynamoDBStore(options), secret: options.secret}))
+            .use(connect.csrf())
+            .use(function(req, res, next) {
+                res.locals._csrf = req.session._csrf;
+                next();
+            })
+        ;
 
 
     }
