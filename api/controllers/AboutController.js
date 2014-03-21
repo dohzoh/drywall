@@ -9,19 +9,12 @@
 
     var self = {
         layout: "layoutGuest"
-        
-        , viewContainer: {
-// /media/sf_Shared/intellij/drywall/views/            
-            partials: {body: "about/index"}
-            , error: false
-            , errors: {}
-        }
 
         /**
         * `AboutController.index`
         */
         , index: function (req, res) {
-            var container = require("lodash").cloneDeep(self.viewContainer) ;
+            var container = viewContainer.factory(req);    // @see api/services/viewContainer.js
 
             return res.view(self.layout,container);
         }

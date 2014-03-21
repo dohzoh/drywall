@@ -9,15 +9,14 @@
 
     var self = {
         layout: "layoutGuest"
-
+        
         /**
          * `LoginController.index`
          */
         , index: function (req, res) {
+            var container = viewContainer.factory(req);    // @see api/services/viewContainer.js
             if (req.method !== 'POST') {
-                return res.view({
-                    layout: self.layout
-                });
+                return res.view(self.layout,container);
             }
 
             else {
@@ -30,18 +29,16 @@
          */
 
         , forgot: function (req, res) {
+            var container = viewContainer.factory(req);    // @see api/services/viewContainer.js
 
             if (req.method !== 'POST') {
-                return res.view({
-                    layout: "../" + self.layout
-                });
+                
+                return res.view(self.layout,container);
             }
 
             else {
-                // Send a Default View
-                return res.view("login/forgot/confirm", {
-                    layout: self.layout
-                });
+                container.partials.body = "login/forgot/confirm";
+                return res.view(self.layout, container);
             }
         }
 
@@ -50,18 +47,15 @@
          */
 
         , reset: function (req, res) {
+            var container = viewContainer.factory(req);    // @see api/services/viewContainer.js
+
             if (req.method !== 'POST') {
-                return res.view({
-                    layout: "../" + self.layout
-                    , id: ""
-                });
+                return res.view(self.layout,container);
             }
 
             else {
-                // Send a Default View
-                return res.view("login/reset/success", {
-                    layout: self.layout
-                });
+                container.partials.body = "login/reset/success";
+                return res.view(self.layout, container);
             }
         }
     };
