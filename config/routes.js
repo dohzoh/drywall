@@ -40,7 +40,7 @@ module.exports.routes = {
         action: 'activate'
     }
     // password reset
-    , 'get /login/reset/:id': {
+    , 'get /login/reset/:token': {
         controller: 'LoginController',
         action: 'reset'
     }

@@ -148,21 +148,30 @@
                 <h2 class="form-signin-heading">Reset Your Password</h2>
                 <div class="form-group">
                     <input type="text" class="form-control input-lg" placeholder="username" name="username" id="username" value="{{username}}" />
+                    {{#errors.name}}
+                    <span class="has-error">{{rule}}</span>
+                    {{/errors.name}}
                 </div>
                 <div class="form-group">
                     <input type="password" class="form-control input-lg" placeholder="new password" name="password" id="password" />
+                    {{#errors.password}}
+                    <span class="has-error">{{rule}}</span>
+                    {{/errors.password}}
                 </div>
                 <div class="form-group">
                     <input type="password" class="form-control input-lg" placeholder="confirm password" name="confirm" id="confirm" />
+                    {{#errors.confirm}}
+                    <span class="has-error">{{rule}}</span>
+                    {{/errors.confirm}}
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" name='id' value='{{ id }}' />
+                    <input type="text" class="form-control" name='token' value='{{ token }}' />
                 </div>
                 <div class="form-group">
                     <input type="text" class="form-control" name='_csrf' value='{{ _csrf }}' />
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-primary btn-lg">Reset</button><br />
+                    <button class="btn btn-primary btn-lg">Replace password</button><br />
                 </div>
             </form>
         </div>

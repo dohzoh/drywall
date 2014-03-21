@@ -98,10 +98,12 @@ error.ValidationError { name:
                         }
                         
                         if (require("lodash").isEmpty(container.confirm)) { 
-                            require("lodash").merge(error,{confirm:[ { rule: 'required', message: 'confirm required' } ] });
+                            error.confirm = [ { rule: 'required', message: 'confirm required' } ];
                         }; 
+
                         if (! require("lodash").isEqual(container.password, container.confirm)) { 
-                            require("lodash").merge(error,{confirm:[ { rule: 'match', message: 'Don\'t Match confirm password' } ] });
+                            if(! require("lodash").has(error, 'confirm'))error.confirm = [];
+                            error.confirm.push({ rule: 'match', message: 'Don\'t Match confirm password' });
                         }
        
                         if( error )callback(error);

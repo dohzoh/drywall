@@ -148,9 +148,15 @@
                 <h2 class="form-signin-heading">Forgot Your Password?</h2>
                 <div class="form-group">
                     <input type="text" id="username" class="form-control input-lg" placeholder="username" name="username" value="{{username}}" />
+                    {{#errors.name}}
+                    <span class="has-error">{{rule}}</span>
+                    {{/errors.name}}
                 </div>
                 <div class="form-group">
                     <input type="text" id="email" class="form-control input-lg" placeholder="email" name="email" value="{{email}}" />
+                    {{#errors.email}}
+                    <span class="has-error">{{rule}}</span>
+                    {{/errors.email}}
                 </div>
                 <div class="form-group">
                     <input type="text" class="form-control" name='_csrf' value='{{ _csrf }}' />
