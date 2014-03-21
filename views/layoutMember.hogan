@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>KPI Tool</title>
+    <title>{{layout_title}}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/styles/bootstrap.css" rel="stylesheet">
@@ -119,8 +119,7 @@
 
       <div id="page-wrapper">
 
-<%- body %>
-
+{{>body}}
       </div><!-- /#page-wrapper -->
 
     </div><!-- /#wrapper -->

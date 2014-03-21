@@ -10,13 +10,12 @@
     "use strict";
 
     var self = {
+        layout: "layoutGuest"
         
-        viewContainer: {
+        , viewContainer: {
 // /media/sf_Shared/intellij/drywall/views/            
             partials: {
-                header: "../layouts/header_guest"
-                , footer: "../layouts/footer_guest"
-
+                body: "signup/index"
             }
             , error: false
             , errors: {}
@@ -31,7 +30,7 @@
             // GET 
             if (req.method !== 'POST') {
                 console.log(container);
-                return res.view(container);
+                return res.view(self.layout, container);
             }
             // POST
             else {
@@ -51,10 +50,11 @@
                     	}
                     	
                         sails.log.warn("signup failed", error);
-                        return res.view(container);
+                        return res.view(self.layout, container);
                     }
                     else {
-                        return res.view("signup/confirm", container);
+                        container.partials.body = "signup/confirm"
+                        return res.view(self.layout, container);
                     }
 
                 });
@@ -193,10 +193,12 @@ error.ValidationError { name:
                     }
                     
                     sails.log.warn("signup failed", error);
-                    return res.view("signup/failed", container);
+                    container.partials.body = "signup/failed";
+                    return res.view(self.layout, container);
                 }
                 else {
-                    return res.view("signup/success", container);
+                    container.partials.body = "signup/success";
+                    return res.view(self.layout, container);
                 }
             });
             
@@ -212,6 +214,7 @@ error.ValidationError { name:
                     }, function(error, userInfo){
                         if(error){callback(error);}
                         else{
+                            error = {};
                         // data not found                            
                             if(require("lodash").isEmpty(userInfo)){
                                 // exist user
@@ -226,12 +229,12 @@ error.ValidationError { name:
                             }                            
                             
                          // not same authtoken
-                            if(container.token !== userInfo.activationToken){
+                            if (! require("lodash").isEqual(container.token,  userInfo.activationToken)) { 
                                 sails.log.warn("Activation Failed, token:", container.token);
                                 require("lodash").merge(error,{name:[ { rule: 'match', message: 'Don\'t Match Authenication Token' } ]});
-                            }                            
+                            }
                                 
-                            if( error )callback(error);
+                            if(! require("lodash").isEmpty(error))callback(error);
                             else callback(null, userInfo);
                         }
                     });

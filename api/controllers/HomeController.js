@@ -10,15 +10,21 @@
 
     var self = {
         layout: "layoutGuest"
+        
+        , viewContainer: {
+// /media/sf_Shared/intellij/drywall/views/            
+            partials: {body: "home/index"}
+            , error: false
+            , errors: {}
+        }
 
         /**
         * `AboutController.index`
         */
         , index: function (req, res) {
-            return res.view({
-                layout: self.layout
-                , todo: 'Not implemented yet!'
-            });
+            var container = require("lodash").cloneDeep(self.viewContainer) ;
+
+            return res.view(self.layout,container);
         }
     };
 
