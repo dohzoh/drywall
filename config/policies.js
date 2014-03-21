@@ -22,7 +22,7 @@ module.exports.policies = {
 //    , 'admin':{'*': false}
 //    , 'withdraw':{'*': false}
 /*    
-    , 'index':{'*': true}
+    , 'home':{'*': true}
     , 'about':{'*': true}
     , 'contact':{'*': true}
     , 'login':{'*': true}

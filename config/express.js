@@ -4,6 +4,8 @@
  * For more information on configuration, check out:
  * http://sailsjs.org/#documentation
  */
+var options = require("./session.js").session;
+
 module.exports.express = {
 
 	// Completely override Express middleware loading.  
@@ -15,6 +17,20 @@ module.exports.express = {
 	//
 	// loadMiddleware: function( app, defaultMiddleware, sails ) { ... }
 
+    middleware: {
+        custom: true
+    }
+
+    , customMiddleware: function(app){
+
+        var connect = require('connect'),
+        DynamoDBStore = require('connect-dynamodb')(connect);
+        app
+            .use(connect.cookieParser())
+            .use(connect.session({ store: new DynamoDBStore(options), secret: options.secret}));
+
+
+    }
 
 
 
