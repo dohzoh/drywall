@@ -76,10 +76,10 @@
             return [
             // null check
                 function(callback){
-                	User.validate({
-                    	name: container.username
-                    	, email: container.email
-                    	, password: container.password
+                    User.validate({
+                        name: container.username
+                        , email: container.email
+                        , password: container.password
                     }, function(error){
 /*                    	
 error.ValidationError { name: 

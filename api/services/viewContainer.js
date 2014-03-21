@@ -13,14 +13,14 @@
         }
         
         , container: function(req){
+        // set default property
+            this.errors = {};
             
-            // set default view
+        // set default view
             var defaultView = "";
             defaultView += req.options.controller;
             defaultView += "/"+req.options.action;
             if(req.options.action!=="index") defaultView += "/index"
-
-sails.log("defaultView", defaultView)           ;
             
             this.partials = {
                 body: defaultView
