@@ -164,7 +164,7 @@
                 </div>
                 <div class="form-group">
                     <button class="btn btn-primary btn-lg">Sign In</button><br />
-                    <span class="pull-right"><a href="/signup">Register</a></span><span><a href="#">Need help?</a></span>
+                    <span class="pull-right"><a href="/signup">Register</a></span><span><a href="/login/forgot/">Need help?</a></span>
                 </div>
             </form>
         </div>

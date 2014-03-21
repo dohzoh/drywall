@@ -14,12 +14,13 @@
          * `AccountController.index`
          */
         , index: function (req, res) {
-            return res.view({
-                layout: self.layout
-                , username: "username"
-                , email: "email"
-                , createAt: "create"
-            });
+            var container = viewContainer.factory(req);    // @see api/services/viewContainer.js
+            
+            container.username = "default username";
+            container.email = "default email";
+            container.createAt = "default createat";
+
+            return res.view(self.layout,container);
         }
 
         /**
