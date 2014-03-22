@@ -23,16 +23,24 @@ module.exports.express = {
 
     , customMiddleware: function(app){
 
-        var connect = require('connect'),
-        DynamoDBStore = require('connect-dynamodb')(connect);
+        var connect = require('connect');
+        var DynamoDBStore = require('connect-dynamodb')(connect);
+        var express = require("express");
         app
-            .use(connect.cookieParser())
-            .use(connect.session({ store: new DynamoDBStore(options), secret: options.secret}))
-            .use(connect.csrf())
+            .use(express.cookieParser())
+            .use(express.session({ store: new DynamoDBStore(options), secret: options.secret}))
+            .use(express.csrf())
             .use(function(req, res, next) {
                 res.locals._csrf = req.session._csrf;
                 next();
             })
+            .use(function(err, req, res, next){
+                if(err.status === 403){
+                    res.status(403).render('403')   // load 403.hogan
+                } else {
+                    next(err)
+                }
+            })        
         ;
 
 
