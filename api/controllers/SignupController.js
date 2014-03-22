@@ -25,7 +25,8 @@
          * `SignupController.index`
          */
         , index: function (req, res) {
-            var container = require("lodash").cloneDeep(self.viewContainer) ;
+//            var container = require("lodash").cloneDeep(self.viewContainer) ;
+            var container = viewContainer.factory(req, res);    // @see api/services/viewContainer.js
 
             // GET 
             if (req.method !== 'POST') {
@@ -96,6 +97,7 @@ error.ValidationError { name:
                             if ("ValidationError" in error) 
                                 error = error.ValidationError;
                         }
+                        else error = {};
                         
                         if (require("lodash").isEmpty(container.confirm)) { 
                             error.confirm = [ { rule: 'required', message: 'confirm required' } ];
@@ -106,7 +108,7 @@ error.ValidationError { name:
                             error.confirm.push({ rule: 'match', message: 'Don\'t Match confirm password' });
                         }
        
-                        if( error )callback(error);
+                        if (! require("lodash").isEmpty(error)) callback(error);
                         else callback();
                         
                     });
@@ -179,7 +181,8 @@ error.ValidationError { name:
          */
 
         , activate: function (req, res) {
-            var container = require("lodash").cloneDeep(self.viewContainer) ;
+//            var container = require("lodash").cloneDeep(self.viewContainer) ;
+            var container = viewContainer.factory(req, res);    // @see api/services/viewContainer.js
             
             var params = req.params.all();
             // see routes.js
