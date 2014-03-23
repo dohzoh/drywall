@@ -14,9 +14,11 @@
          * `LogoutController.index`
          */
         , index: function (req, res) {
-            return res.view({
-                layout: self.layout
-            });
+            delete req.session.authenticated;
+            delete req.session.user_id;
+            delete req.session.userInfo;
+            // Send a JSON response
+            res.redirect('/', 302);
         }
     };
 
