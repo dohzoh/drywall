@@ -28,6 +28,7 @@ module.exports.policies = {
     , 'login':{'*': true}
     , 'signup':{'*': true}
     , 'logout':{'*': true}
+    , "extends":{"*": true}
 
   /*
 	// Here's an example of adding some policies to a controller

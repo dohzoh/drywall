@@ -11,7 +11,8 @@
     var self = {
         attributes: {
             user_id: {
-                primaryKey: true    // primary hash key(default id)
+                type: "string"
+                , primaryKey: true    // primary hash key(default id)
             }
         // user name and login id
             , name: {

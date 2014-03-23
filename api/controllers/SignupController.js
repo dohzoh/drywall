@@ -258,7 +258,7 @@ error.ValidationError { name:
                         else{
                             req.session.user_id = userInfo.user_id;
                             delete userInfo.password;
-                            req.session.user_info = userInfo;                    
+                            req.session.userInfo = userInfo;
                             req.session.authenticated = true;
                             callback();
                         }

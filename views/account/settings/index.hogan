@@ -156,6 +156,12 @@
 			</div>
 		</div>
         <!-- /.row -->
+		<div class="row">
+			<div class="col-lg-1 hidden-xs hidden-sm">
+                            <a href="/withdraw">Withdraw</a>
+			</div>
+		</div>
+        <!-- /.row -->
 
 
 <!-- {{! comment out start --------------------------------------->
