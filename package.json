@@ -8,7 +8,6 @@
     "sails-disk": "~0.10.0",
     "rc": "~0.3.3",
     "include-all": "~0.1.3",
-    "ejs": "~0.8.4",
     "grunt": "0.4.2",
     "grunt-sync": "~0.0.4",
     "grunt-contrib-copy": "~0.4.1",
@@ -23,7 +22,6 @@
     "grunt-contrib-coffee": "~0.7.0"
 	, "sails-dynamodb": "git://github.com/dohzoh/sails-dynamodb.git#master"
 	, "async": "~0.2.x"
-	, "bcrypt": "0.7.x"
     , "aws-sdk": "2.x"
     , "connect": "2.x"
     , "connect-dynamodb": "1.x"
@@ -32,7 +30,8 @@
     , "authom": "0.4.x"
     , "whiskers": "0.3.x"
     , "nodemailer": "0.6.x"  
-    , "node-gyp": "0.10.x"
+    , "express": ""
+    , "hogan.js": ""
   },
   "scripts": {
     "start": "node app.js",

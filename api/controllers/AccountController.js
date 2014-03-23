@@ -24,7 +24,19 @@
          */
         , password: function (req, res) {
             var container = viewContainer.factory(req, res);    // @see api/services/viewContainer.js
-            return res.view(self.layout,container);
+            
+            // GET 
+            if (req.method !== 'POST') {
+                return res.view(self.layout, container);
+            }
+            // POST
+            else {
+               
+                
+                return res.view(self.layout, container);
+            }            
+            
+            
         }
         /**
          * `AccountController.email`

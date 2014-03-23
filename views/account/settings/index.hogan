@@ -145,7 +145,11 @@
 					<tbody>
 						<tr>
 							<td>Email:</td>
-							<td>{{ userInfo.email }}</td>
+                                                        <td>{{ userInfo.email }} <a href="/account/email">Edit</a></td>
+						</tr>
+						<tr>
+							<td>Password:</td>
+							<td>******** <a href="/account/password">Edit</a></td></td>
 						</tr>
 						<tr>
 							<td>Registered since:</td>
